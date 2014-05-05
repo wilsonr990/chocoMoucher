@@ -10,7 +10,7 @@ public class main {
     public static void main(String[] args){
         ChocoMoucher myInterface;
         myInterface = new ChocoMoucher();
-        myInterface.getGameInstance();
+        myInterface.Start();
     }
     
 }

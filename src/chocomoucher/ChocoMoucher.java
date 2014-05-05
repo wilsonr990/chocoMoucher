@@ -9,8 +9,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import static java.awt.event.InputEvent.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -22,12 +22,43 @@ import javax.imageio.ImageIO;
  * @author wilsonr
  */
 public class ChocoMoucher{
+    private Robot r;
+    private BufferedImage chocoMoucheImg;
+    private Point gameLocation;
+    private int gameHeigth;
+    private int gameWidth;
 
     ChocoMoucher(){
-        
+        try {
+            r = new Robot();
+            
+            chocoMoucheImg = getGameInstance();
+            if( chocoMoucheImg !=null ){
+                gameWidth = chocoMoucheImg.getWidth();
+                gameHeigth = chocoMoucheImg.getHeight();
+            }
+        } catch (AWTException ex) {
+            Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    void getGameInstance(){
+    void Start(){
+        if( chocoMoucheImg !=null ){
+            try {
+                r.mouseMove(gameLocation.x + (gameWidth>>1), gameLocation.y + (gameHeigth>>1));
+                r.mousePress(BUTTON1_DOWN_MASK);
+		Thread.sleep(100);
+                r.mouseRelease(BUTTON1_DOWN_MASK);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+            System.out.println("Game is Not Openned");
+        }
+    }
+    
+    private BufferedImage getGameInstance(){
         BufferedImage screenImg;
         BufferedImage idImage;
         
@@ -36,8 +67,10 @@ public class ChocoMoucher{
         
         Point p = getSubImageLocation(idImage, screenImg);
         if(p != null){
-            System.out.println("done");
+            gameLocation = p;
+            return screenImg.getSubimage(p.x, p.y, idImage.getWidth(), idImage.getHeight());
         }
+        return null;
     }
 
     private Point getSubImageLocation(BufferedImage idImage, BufferedImage screenImg) {
@@ -86,18 +119,11 @@ public class ChocoMoucher{
     }
 
     private BufferedImage getScreenImage() {
-        try {
-            BufferedImage image;
-            Robot r;
-            r = new Robot();
-            Dimension dimScreen;
-            dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
-            Rectangle screen = new Rectangle(dimScreen);
-            image = r.createScreenCapture( screen );
-            return image;
-        } catch (AWTException ex) {
-            Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        BufferedImage image;
+        Dimension dimScreen;
+        dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
+        Rectangle screen = new Rectangle(dimScreen);
+        image = r.createScreenCapture( screen );
+        return image;
     }
 }
