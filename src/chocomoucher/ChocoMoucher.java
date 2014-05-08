@@ -13,6 +13,7 @@ import static java.awt.event.InputEvent.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -21,178 +22,167 @@ import javax.imageio.ImageIO;
  *
  * @author wilsonr
  */
+
 public class ChocoMoucher{
     private Robot r;
-    private BufferedImage chocoMoucheImg;
+    private HashMap<String, BufferedImage> images;
     private Point gameLocation, mapLocation;
+    private Dimension mapDimension, gameDimension, cellDimension;
     private char[] map;
-    BufferedImage[] symbols;
-    private Dimension mapDimension, gameDimension;
 
-    ChocoMoucher(){
-        symbols = new BufferedImage[12];
-        symbols[0] = readImage( "images/cell.png" );
-        symbols[1] = readImage( "images/1.png" );
-        symbols[2] = readImage( "images/2.png" );
-        symbols[3] = readImage( "images/3.png" );
-        symbols[4] = readImage( "images/4.png" );
-        symbols[5] = readImage( "images/5.png" );
-        symbols[6] = readImage( "images/6.png" );
-        symbols[7] = readImage( "images/7.png" );
-        symbols[8] = readImage( "images/8.png" );
-        symbols[10] = readImage( "images/!.png" );
-        symbols[11] = readImage( "images/fly.png" );
+    ChocoMoucher() throws NoOpenGame{
         try {
             r = new Robot();
+            map = new char[72];
+            images = new HashMap<>();
+            readImages();
             
-            chocoMoucheImg = getGameInstance();
-            if( chocoMoucheImg !=null ){
-                gameDimension = new Dimension( chocoMoucheImg.getWidth(), chocoMoucheImg.getHeight());
-            }
+            gameLocation = getGameLocation();
+            
+            gameDimension = new Dimension( images.get("base").getWidth(), images.get("base").getHeight());
+            mapDimension = new Dimension(images.get("map").getWidth(), images.get("map").getHeight());
+            cellDimension = new Dimension(mapDimension.width/8, mapDimension.height/9);
         } catch (AWTException ex) {
             Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    void Start(){
-        if( chocoMoucheImg !=null ){
-            try {
-                r.mouseMove(gameLocation.x + (gameDimension.width>>1), gameLocation.y + (gameDimension.height>>1));
-                r.mousePress(BUTTON1_DOWN_MASK);
-		Thread.sleep(100);
-                r.mouseRelease(BUTTON1_DOWN_MASK);
-		Thread.sleep(100);
-                
-                initMap();
-                
-                if( map != null ){
-                    int count = 0;
-                    for (char cell: map){
-                        System.out.print( cell + ", " );
-                        if(++count == 8){
-                            count=0;
-                            System.out.print( "\n" );
-                        }
-                    }
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        else{
-            System.out.println("Game is Not Openned");
-        }
-    }
-    
-    void initMap(){
-        if( chocoMoucheImg !=null ){
-            BufferedImage screenImg, mapImage;
+    public void Start() throws NoOpenGame, gameIsLocked{
+        try {
+            if( gameDimension == null )
+                throw new NoOpenGame();
             
-            screenImg = getScreenImage( new Rectangle(gameLocation, gameDimension) );
-            mapImage = readImage( "images/map.png" );
+            r.mouseMove(gameLocation.x + (gameDimension.width>>1), gameLocation.y + (gameDimension.height>>1));
+            r.mousePress(BUTTON1_DOWN_MASK);
+            Thread.sleep(100);
+            r.mouseRelease(BUTTON1_DOWN_MASK);
+            Thread.sleep(100);
+
+            mapLocation = getMapLocation();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void Update() throws NoOpenGame{
+        try {
+            if( gameDimension == null )
+                throw new NoOpenGame();
             
-            mapDimension = new Dimension(mapImage.getWidth(), mapImage.getHeight());
-            
-            Point p = getSubImageLocation(mapImage, screenImg);
-            if(p != null){
-                mapLocation = p;
-                map = new char[72];
-            }
-        }
-        else{
-            System.out.println("Game is Not Openned");
+            mapLocation = getMapLocation();
+        } catch (gameIsLocked ex) {
+            throw new NoOpenGame();
         }
     }
     
-    private void updateMap(Point p) {
-        if( chocoMoucheImg !=null ){
-            BufferedImage screenImg;
+    public void clickOn(Point p) throws NoOpenGame, gameIsLocked{
+        try {
+            if( gameDimension == null || mapLocation == null )
+                throw new NoOpenGame();
+            int cellPositionX = (int) (gameLocation.x + mapLocation.x + p.x*cellDimension.getWidth() + cellDimension.getWidth()/2);
+            int cellPositionY = (int) (gameLocation.y + mapLocation.y + p.y*cellDimension.getHeight()+ cellDimension.getHeight()/2);
+            r.mouseMove(cellPositionX, cellPositionY);
+            r.mousePress(BUTTON1_DOWN_MASK);
+            Thread.sleep(100);
+            r.mouseRelease(BUTTON1_DOWN_MASK);
+            Thread.sleep(100);
+            r.mousePress(BUTTON1_DOWN_MASK);
+            Thread.sleep(100);
+            r.mouseRelease(BUTTON1_DOWN_MASK);
+            Thread.sleep(100);
 
-            Point relative;
-            relative = new Point(gameLocation.x + mapLocation.x + p.x*mapDimension.width/8, gameLocation.y + mapLocation.y + p.y*mapDimension.height/9);
-
-            screenImg = getScreenImage( new Rectangle(relative, new Dimension(mapDimension.width/8, mapDimension.height/9)) );
-
-            if(getSubImageLocation(symbols[1], screenImg)!=null )
-                map[p.x+p.y*8] = '1';
-            else if(getSubImageLocation(symbols[2], screenImg)!=null )
-                map[p.x+p.y*8] = '2';
-            else if(getSubImageLocation(symbols[3], screenImg)!=null )
-                map[p.x+p.y*8] = '3';/*
-            else if(getSubImageLocation(symbols[4], screenImg)!=null )
-                map[p.x+p.y*8] = '4';
-            else if(getSubImageLocation(symbols[5], screenImg)!=null )
-                map[p.x+p.y*8] = '5';
-            else if(getSubImageLocation(symbols[6], screenImg)!=null )
-                map[p.x+p.y*8] = '6';
-            else if(getSubImageLocation(symbols[7], screenImg)!=null )
-                map[p.x+p.y*8] = '7';
-            else if(getSubImageLocation(symbols[8], screenImg)!=null )
-                map[p.x+p.y*8] = '8';*/
-            else if(getSubImageLocation(symbols[11], screenImg)!=null )
-                map[p.x+p.y*8] = '9';
-            else{
-                map[p.x+p.y*8] = 'p';
-                for(int k=p.x-1; k<=p.x+1; k++)for(int l=p.y-1; l<=p.y+1; l++){
-                    if(k>=0 && k<8 && l>=0 && l<9){
-                        if(map[k+l*8]==(char)(0))
-                            updateMap( new Point(k,l) );
-                    }
-                }
-            }
+            updateMap( p );
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        else{
-            System.out.println("Game is Not Openned");
+    }
+
+    char[] getMap() {
+        return map;
+    }
+
+    private void readImages(){
+        try {
+            images.put("base", readImage( "images/idImage.png" ) );
+            images.put("map", readImage( "images/map.png" ) );
+            images.put("fly", readImage( "images/fly.png" ) );
+            images.put("cell", readImage( "images/cell.png" ) );
+            images.put("1", readImage( "images/1.png" ) );
+            images.put("2", readImage( "images/2.png" ) );
+            images.put("3", readImage( "images/3.png" ) );
+            images.put("4", readImage( "images/4.png" ) );
+            images.put("5", readImage( "images/5.png" ) );
+            images.put("6", readImage( "images/6.png" ) );
+            images.put("7", readImage( "images/7.png" ) );
+            images.put("8", readImage( "images/8.png" ) );
+        } catch (IOException ex) {
+            System.err.println("Can´t Load All Images");
         }
     }
     
-    void clickOn(Point p){
-        if( chocoMoucheImg !=null ){
-            try {
-                r.mouseMove(gameLocation.x + mapLocation.x + p.x*mapDimension.width/8 + mapDimension.width/16, gameLocation.y + mapLocation.y + p.y*mapDimension.height/9 + mapDimension.height/18);
-                r.mousePress(BUTTON1_DOWN_MASK);
-		Thread.sleep(100);
-                r.mouseRelease(BUTTON1_DOWN_MASK);
-		Thread.sleep(100);
-                r.mousePress(BUTTON1_DOWN_MASK);
-		Thread.sleep(100);
-                r.mouseRelease(BUTTON1_DOWN_MASK);
-		Thread.sleep(100);
-                
-                updateMap( p );
-                
-                if( map != null ){
-                    int count = 0;
-                    for (char cell: map){
-                        System.out.print( cell + ", " );
-                        if(++count == 8){
-                            count=0;
-                            System.out.print( "\n" );
-                        }
-                    }
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        else{
-            System.out.println("Game is Not Openned");
-        }
-    }
-    
-    private BufferedImage getGameInstance(){
+    private Point getGameLocation() throws NoOpenGame{
+        Point location;        
         BufferedImage screenImg;
-        BufferedImage idImage;
-        
+
         screenImg = getScreenImage( null );
-        idImage = readImage( "images/idImage.png" );
+        location = getSubImageLocation(images.get("base"), screenImg);
+
+        if(location != null)
+            return location;
+        throw new NoOpenGame();
+    }
+    
+    private Point getMapLocation() throws gameIsLocked {
+        Point location;
+        BufferedImage screenImg;
         
-        Point p = getSubImageLocation(idImage, screenImg);
-        if(p != null){
-            gameLocation = p;
-            return screenImg.getSubimage(p.x, p.y, idImage.getWidth(), idImage.getHeight());
+        screenImg = getScreenImage( new Rectangle(gameLocation, gameDimension) );
+        location = getSubImageLocation(images.get("map"), screenImg);
+        
+        if(location != null)
+            return location;
+        throw new gameIsLocked();
+    }
+    
+    private void updateMap(Point p) throws gameIsLocked {
+        BufferedImage screenImg;
+        Point cellPosition;
+        
+        int cellPositionX = (int) (gameLocation.x + mapLocation.x + p.x*cellDimension.getWidth());
+        int cellPositionY = (int) (gameLocation.y + mapLocation.y + p.y*cellDimension.getHeight());
+        cellPosition = new Point(cellPositionX, cellPositionY);
+
+        screenImg = getScreenImage( new Rectangle(cellPosition, cellDimension) );
+
+        if(getSubImageLocation(images.get("1"), screenImg)!=null )
+            map[p.x+p.y*8] = '1';
+        else if(getSubImageLocation(images.get("2"), screenImg)!=null )
+            map[p.x+p.y*8] = '2';
+        else if(getSubImageLocation(images.get("3"), screenImg)!=null )
+            map[p.x+p.y*8] = '3';/*
+        else if(getSubImageLocation(symbols[4], screenImg)!=null )
+            map[p.x+p.y*8] = '4';
+        else if(getSubImageLocation(symbols[5], screenImg)!=null )
+            map[p.x+p.y*8] = '5';
+        else if(getSubImageLocation(symbols[6], screenImg)!=null )
+            map[p.x+p.y*8] = '6';
+        else if(getSubImageLocation(symbols[7], screenImg)!=null )
+            map[p.x+p.y*8] = '7';
+        else if(getSubImageLocation(symbols[8], screenImg)!=null )
+            map[p.x+p.y*8] = '8';*/
+        else if(getSubImageLocation(images.get("fly"), screenImg)!=null )
+            map[p.x+p.y*8] = '9';
+        else if(getSubImageLocation(images.get("cell"), screenImg)!=null )
+            throw new gameIsLocked();
+        else{
+            map[p.x+p.y*8] = '0';
+            for(int k=p.x-1; k<=p.x+1; k++)for(int l=p.y-1; l<=p.y+1; l++){
+                if(k>=0 && k<8 && l>=0 && l<9){
+                    if(map[k+l*8]==(char)(0))
+                        updateMap( new Point(k,l) );
+                }
+            }
         }
-        return null;
     }
 
     private Point getSubImageLocation(BufferedImage idImage, BufferedImage screenImg) {
@@ -227,25 +217,19 @@ public class ChocoMoucher{
         return null;
     }
 
-    private BufferedImage readImage( String url) {
-        try {
-            Graphics g;
-            BufferedImage idImage;
-            
-            idImage = ImageIO.read(new FileInputStream(url));
-            return idImage;
-        } catch (IOException ex) {
-            System.out.println("Cannot read: " + url);
-        }
-        return null;
+    private BufferedImage readImage( String url) throws IOException {
+        Graphics g;
+        BufferedImage idImage;
+
+        idImage = ImageIO.read(new FileInputStream(url));
+        return idImage;
     }
 
     private BufferedImage getScreenImage( Rectangle screenRectangle ) {
         BufferedImage image;
         Rectangle screenRect;
         if( screenRectangle == null ){
-            Dimension dimScreen;
-            dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
+            Dimension dimScreen = Toolkit.getDefaultToolkit().getScreenSize();
             screenRect = new Rectangle(dimScreen);
         }
         else{
