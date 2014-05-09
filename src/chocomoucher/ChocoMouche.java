@@ -23,14 +23,14 @@ import javax.imageio.ImageIO;
  * @author wilsonr
  */
 
-public class ChocoMoucher{
+public class ChocoMouche{
     private Robot r;
     private HashMap<String, BufferedImage> images;
     private Point gameLocation, mapLocation;
     private Dimension mapDimension, gameDimension, cellDimension;
     private char[] map;
 
-    ChocoMoucher() throws NoOpenGame{
+    ChocoMouche() throws NoOpenGame{
         try {
             r = new Robot();
             map = new char[72];
@@ -43,7 +43,7 @@ public class ChocoMoucher{
             mapDimension = new Dimension(images.get("map").getWidth(), images.get("map").getHeight());
             cellDimension = new Dimension(mapDimension.width/8, mapDimension.height/9);
         } catch (AWTException ex) {
-            Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ChocoMouche.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -60,7 +60,7 @@ public class ChocoMoucher{
 
             mapLocation = getMapLocation();
         } catch (InterruptedException ex) {
-            Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ChocoMouche.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -70,6 +70,7 @@ public class ChocoMoucher{
                 throw new NoOpenGame();
             
             mapLocation = getMapLocation();
+            map = new char[72];
         } catch (gameIsLocked ex) {
             throw new NoOpenGame();
         }
@@ -93,7 +94,7 @@ public class ChocoMoucher{
 
             updateMap( p );
         } catch (InterruptedException ex) {
-            Logger.getLogger(ChocoMoucher.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ChocoMouche.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
