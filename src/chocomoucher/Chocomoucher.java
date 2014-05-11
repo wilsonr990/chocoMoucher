@@ -7,6 +7,7 @@
 package chocomoucher;
 
 import java.awt.Point;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,55 +16,97 @@ import java.util.logging.Logger;
  * @author wilsonr
  */
 class Chocomoucher {
-    private final ChocoMouche game;
+    private ChocoMouche game;
     private boolean alive;
-    private Point move, lastMove;
-    private char[] map, probs;
+    private int[][] map, probs;
     private int lives;
+    private Analizer analizer;
     
     public Chocomoucher( ChocoMouche theGame ) {
         game = theGame;
-        move = new Point(0,0);
         lives = 3;
+        alive = true;
     }
 
-    private void updateLastMove() {
-        lastMove = move;
-        char valueInLastMove = map[lastMove.x+lastMove.y*8];
+    private void restartGame() {
+        analizer = new Analizer();
+        alive = true;
         
-        
-    }
-    
-    private void decideNextMove() {
-    }
-    
-    public void play() {
         try {
+            game.Start();
+        } catch ( NoOpenGame | gameIsLocked ex) {
+            System.out.println("Game Is Not Ready");
+            alive = false;
+        }
+    }
+
+    private void updateLastMove( Point lastMove) {
+        int val = analizer.update(lastMove, game.getMap());
+        if( val == 9 )
+            lives--;
+        if( lives==0 )
+            alive =false;
+    }
+    
+    private Point decideNextMove() {
+        analizer.findProbabilities();
+        List<Point> moves = analizer.bestMove();
+        
+        int random = (int)(Math.random() * (moves.size()-1));
+        return moves.get(random);
+    }
+    
+    public void play(){
+        System.out.println("playing");
+        lives = 3;
+        restartGame();
+        System.out.println("started");
+        map = game.getMap();
+
+        while(alive){
             try {
-                game.Start();
-            } catch (gameIsLocked ex) {
-                Thread.sleep(100);
-                game.Update();
-            }
-            lives = 3;
-            map = game.getMap();
-            
-            while(alive){
-                try {
-                    game.clickOn( move );
-                } catch (gameIsLocked ex) {
-                    System.err.println("Trying Again");
-                    Thread.sleep(200);
-                    game.clickOn( move );
+                Point move = decideNextMove();
+                printMap();
+                
+                System.out.println("moving..." + move.x+" "+move.y);
+                
+                game.clickOn( move );
+                
+                if ( analizer.hasEnded() ){
+                    continue;
                 }
-                updateLastMove();
-                decideNextMove();
+                
+                updateLastMove(move);
+                System.out.println("sdasdasd");
+            } catch (NoOpenGame ex) {
+                
+            } catch (gameIsLocked ex) {
+                
             }
-            
-        }catch ( NoOpenGame | gameIsLocked ex) {
-            System.err.println("Game Is Not Ready");
-        }catch (InterruptedException ex1) {
-            Logger.getLogger(Chocomoucher.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+    }
+
+    private void move(final Point move) {
+        try{
+            game.clickOn( move );
+        }catch( NoOpenGame | gameIsLocked ex) {
+            if ( analizer.hasEnded() ){
+                System.out.println("restarting...");
+                restartGame();
+            }else{
+                alive = false;
+            }
+        }
+    }
+    public void printMap(){
+        if( map != null ){
+            int count = 0;
+            for( int i=0; i<8; i++){
+                for( int j=0; j<9; j++){
+                    System.out.print( map[i][j] +"("+analizer.probabilities[i][j]+")" +", " );
+                }
+                System.out.print("\n");
+            }
         }
     }
 }

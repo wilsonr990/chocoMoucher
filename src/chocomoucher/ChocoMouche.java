@@ -28,12 +28,18 @@ public class ChocoMouche{
     private HashMap<String, BufferedImage> images;
     private Point gameLocation, mapLocation;
     private Dimension mapDimension, gameDimension, cellDimension;
-    private char[] map;
+    private int[][] map;
 
     ChocoMouche() throws NoOpenGame{
         try {
             r = new Robot();
-            map = new char[72];
+            map = new int[8][9];
+            for(int i=0; i<8; i++){
+                for(int j=0; j<9; j++){
+                    map[i][j] = -1;
+                }
+            }
+            
             images = new HashMap<>();
             readImages();
             
@@ -56,7 +62,12 @@ public class ChocoMouche{
             r.mousePress(BUTTON1_DOWN_MASK);
             Thread.sleep(100);
             r.mouseRelease(BUTTON1_DOWN_MASK);
+            Thread.sleep(500);
+            r.mousePress(BUTTON1_DOWN_MASK);
             Thread.sleep(100);
+            r.mouseRelease(BUTTON1_DOWN_MASK);
+            r.mouseMove(gameLocation.x -10, gameLocation.y -10);
+            Thread.sleep(1000);
 
             mapLocation = getMapLocation();
         } catch (InterruptedException ex) {
@@ -70,7 +81,7 @@ public class ChocoMouche{
                 throw new NoOpenGame();
             
             mapLocation = getMapLocation();
-            map = new char[72];
+            map = new int[8][9];
         } catch (gameIsLocked ex) {
             throw new NoOpenGame();
         }
@@ -98,7 +109,7 @@ public class ChocoMouche{
         }
     }
 
-    char[] getMap() {
+    int[][] getMap() {
         return map;
     }
 
@@ -107,15 +118,16 @@ public class ChocoMouche{
             images.put("base", readImage( "images/idImage.png" ) );
             images.put("map", readImage( "images/map.png" ) );
             images.put("fly", readImage( "images/fly.png" ) );
+            images.put("fly2", readImage( "images/fly2.png" ) );
             images.put("cell", readImage( "images/cell.png" ) );
             images.put("1", readImage( "images/1.png" ) );
             images.put("2", readImage( "images/2.png" ) );
             images.put("3", readImage( "images/3.png" ) );
-            images.put("4", readImage( "images/4.png" ) );
+            /*images.put("4", readImage( "images/4.png" ) );
             images.put("5", readImage( "images/5.png" ) );
             images.put("6", readImage( "images/6.png" ) );
             images.put("7", readImage( "images/7.png" ) );
-            images.put("8", readImage( "images/8.png" ) );
+            images.put("8", readImage( "images/8.png" ) );*/
         } catch (IOException ex) {
             System.err.println("Can´t Load All Images");
         }
@@ -156,30 +168,32 @@ public class ChocoMouche{
         screenImg = getScreenImage( new Rectangle(cellPosition, cellDimension) );
 
         if(getSubImageLocation(images.get("1"), screenImg)!=null )
-            map[p.x+p.y*8] = '1';
+            map[p.x][p.y] = 1;
         else if(getSubImageLocation(images.get("2"), screenImg)!=null )
-            map[p.x+p.y*8] = '2';
+            map[p.x][p.y] = 2;
         else if(getSubImageLocation(images.get("3"), screenImg)!=null )
-            map[p.x+p.y*8] = '3';/*
-        else if(getSubImageLocation(symbols[4], screenImg)!=null )
-            map[p.x+p.y*8] = '4';
+            map[p.x][p.y] = 3;
+        /*else if(getSubImageLocation(symbols[4], screenImg)!=null )
+            map[p.x][p.y] = 4;
         else if(getSubImageLocation(symbols[5], screenImg)!=null )
-            map[p.x+p.y*8] = '5';
+            map[p.x][p.y] = 5;
         else if(getSubImageLocation(symbols[6], screenImg)!=null )
-            map[p.x+p.y*8] = '6';
+            map[p.x][p.y] = 6;
         else if(getSubImageLocation(symbols[7], screenImg)!=null )
-            map[p.x+p.y*8] = '7';
+            map[p.x][p.y] = 7;
         else if(getSubImageLocation(symbols[8], screenImg)!=null )
-            map[p.x+p.y*8] = '8';*/
+            map[p.x][p.y] = 8;*/
         else if(getSubImageLocation(images.get("fly"), screenImg)!=null )
-            map[p.x+p.y*8] = '9';
+            map[p.x][p.y] = 9;
+        else if(getSubImageLocation(images.get("fly2"), screenImg)!=null )
+            map[p.x][p.y] = 9;
         else if(getSubImageLocation(images.get("cell"), screenImg)!=null )
             throw new gameIsLocked();
         else{
-            map[p.x+p.y*8] = '0';
+            map[p.x][p.y] = 0;
             for(int k=p.x-1; k<=p.x+1; k++)for(int l=p.y-1; l<=p.y+1; l++){
                 if(k>=0 && k<8 && l>=0 && l<9){
-                    if(map[k+l*8]==(char)(0))
+                    if(map[k][l]==-1)
                         updateMap( new Point(k,l) );
                 }
             }
