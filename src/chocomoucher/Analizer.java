@@ -76,6 +76,8 @@ public class Analizer {
             else if( probabilities[k][l] < minProbability && map[k][l]==-1 ){
                 minProbability = probabilities[k][l];
             }
+        if( minProbability == 1 )
+            return null;
         for(int k=0; k<8; k++)for(int l=0; l<9; l++)
             if( probabilities[k][l] == minProbability && map[k][l]==-1 ){
                 moves.add( new Point(k,l) );
