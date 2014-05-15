@@ -34,7 +34,7 @@ class Chocomoucher {
         
         try {
             game.Start();
-        } catch ( NoOpenGame | gameIsLocked ex) {
+        } catch ( NoOpenGame | GameIsLocked ex) {
             System.out.println("Game Is Not Ready");
             alive = false;
         }
@@ -80,7 +80,7 @@ class Chocomoucher {
                 System.out.println("sdasdasd");
             } catch (NoOpenGame ex) {
                 
-            } catch (gameIsLocked ex) {
+            } catch (GameIsLocked ex) {
                 
             }
         }
@@ -89,7 +89,7 @@ class Chocomoucher {
     private void move(final Point move) {
         try{
             game.clickOn( move );
-        }catch( NoOpenGame | gameIsLocked ex) {
+        }catch( NoOpenGame | GameIsLocked ex) {
             if ( analizer.hasEnded() ){
                 System.out.println("restarting...");
                 restartGame();
