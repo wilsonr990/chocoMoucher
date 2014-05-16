@@ -66,30 +66,27 @@ public class Image {
     }
     
     public Point findSubImage( Image img ) {
-        int validatedRows = 0;
-        int pixelsOfScreenToExplore;
+        int widthDiference = buffer.getWidth() - img.getWidth();
+        int heigthDiference = buffer.getHeight() - img.getHeight();
+        if( widthDiference<0 || heigthDiference<0 )
+            return null;
+        
+        int validatedPixels = 0;
         int imgSize = img.getWidth()*img.getHeight();
-        int widthToExplore = buffer.getWidth() - img.getWidth();
-        int heigthToExplore = buffer.getHeight() - img.getHeight();
-        pixelsOfScreenToExplore = widthToExplore*heigthToExplore;
-        for (int i = 0; i < pixelsOfScreenToExplore; i++) {
-            int X = i % widthToExplore;
-            int Y = i / widthToExplore;
+        for (int i = 0; i < widthDiference * heigthDiference; i++) {
+            int X = i % widthDiference;
+            int Y = i / widthDiference;
             for (int j = 0; j <imgSize; j++) {
                 int x = j % img.getWidth();
                 int y = j / img.getWidth();
-                int screenRGB = buffer.getRGB(X+x, Y+y);
-                int idRGB = img.getRGB(x,y);
-                if( idRGB == new Color(0,0,0).getRGB() )
-                    continue;
-                if (screenRGB == idRGB) {
-                    if (x==img.getWidth()-1) {
-                        validatedRows++;
-                        if (validatedRows == img.getHeight()) {
-                            return new Point(X,Y);
-                        }
-                    }
-                } else {
+                
+                if (buffer.getRGB(X+x, Y+y) == img.getRGB(x,y)) {
+                    validatedPixels++;
+                    if (validatedPixels == imgSize)
+                        return new Point(X,Y);
+                }
+                else if( img.getRGB(x,y) != Color.BLACK.getRGB() ){
+                    validatedPixels = 0;
                     break;
                 }
             }

@@ -87,7 +87,7 @@ public class Analizer {
 
     public boolean hasEnded(){
         for(int k=0; k<8; k++)for(int l=0; l<9; l++)
-            if( probabilities[k][l]>0 && probabilities[l][l]<1 )
+            if( probabilities[k][l]>0 && probabilities[k][l]<1 )
                 return false;
             
         return true;

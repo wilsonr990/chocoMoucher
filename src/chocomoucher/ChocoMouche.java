@@ -51,7 +51,8 @@ public class ChocoMouche{
             if( gameDimension == null )
                 throw new NoOpenGame();
             
-            r.mouseMove(gameLocation.x + (gameDimension.width>>1), gameLocation.y + (gameDimension.height>>1));
+            Thread.sleep(100);
+            /*r.mouseMove(gameLocation.x + (gameDimension.width>>1), gameLocation.y + (gameDimension.height>>1));
             r.mousePress(BUTTON1_DOWN_MASK);
             Thread.sleep(100);
             r.mouseRelease(BUTTON1_DOWN_MASK);
@@ -60,9 +61,10 @@ public class ChocoMouche{
             Thread.sleep(100);
             r.mouseRelease(BUTTON1_DOWN_MASK);
             r.mouseMove(gameLocation.x -10, gameLocation.y -10);
-            Thread.sleep(1000);
+            Thread.sleep(1000);*/
 
             mapLocation = getMapLocation();
+            Thread.sleep(100);
         } catch (InterruptedException ex) {
             Logger.getLogger(ChocoMouche.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -94,7 +96,7 @@ public class ChocoMouche{
             r.mousePress(BUTTON1_DOWN_MASK);
             Thread.sleep(100);
             r.mouseRelease(BUTTON1_DOWN_MASK);
-            Thread.sleep(100);
+            Thread.sleep(680);
 
             updateMap( p );
         } catch (InterruptedException ex) {
