@@ -46,7 +46,7 @@ public class ChocoMouche{
         }
     }
     
-    public void Start() throws NoOpenGame, GameIsLocked{
+    public void start() throws NoOpenGame, GameIsLocked{
         try {
             if( gameDimension == null )
                 throw new NoOpenGame();
@@ -70,7 +70,7 @@ public class ChocoMouche{
         }
     }
     
-    public void Update() throws NoOpenGame{
+    public void update() throws NoOpenGame{
         try {
             if( gameDimension == null )
                 throw new NoOpenGame();
@@ -133,7 +133,7 @@ public class ChocoMouche{
             Point location;
             Image screenImg;
             
-            screenImg = new Image( (Rectangle)null );
+            screenImg = new Image( (Rectangle)(null) );
             location = screenImg.findSubImage(images.get("base"));
             
             if(location != null)

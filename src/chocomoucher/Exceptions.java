@@ -25,3 +25,9 @@ class GameIsLocked extends Exception {
     public GameIsLocked() {
     }
 }
+
+class GameHasEnded extends Exception {
+    public GameHasEnded() {
+    }
+}
+

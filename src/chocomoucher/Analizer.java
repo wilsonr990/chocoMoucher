@@ -16,13 +16,14 @@ import java.util.List;
  */
 public class Analizer {
     private int[][] map;
-    private List<Point> numbers;
+    private final List<Point> numbers;
     public double[][] probabilities;
     private int totalOfCombinations;
     private double[][] ocurrencesOfMines;
     
     Analizer(){
         this.probabilities = new double[8][9];
+        this.ocurrencesOfMines = null;
         this.numbers = new LinkedList<>();
         
         map = new int[8][9];
@@ -33,7 +34,7 @@ public class Analizer {
     }
 
     public int update( Point lastMove, int[][] m){
-        map = m;
+        map = m.clone();
         restartProbabilities();
         
         if( map[lastMove.x][lastMove.y] == 9 ){
@@ -48,8 +49,8 @@ public class Analizer {
     double[][] findProbabilities( ) {
         totalOfCombinations = 0;
         ocurrencesOfMines = new double[8][9];
-        for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-            ocurrencesOfMines[i][j] = probabilities[i][j];
+        for( int i=0; i<8; i++ )
+            System.arraycopy(probabilities[i], 0, ocurrencesOfMines[i], 0, 9);
         
         totalOfCombinations = calculateCombinations();
         
@@ -64,20 +65,21 @@ public class Analizer {
         return probabilities;
     }
     
-    List<Point> bestMove( ) {
+    List<Point> bestMove( ) throws GameHasEnded {
         double minProbability = 2;
         LinkedList<Point> moves = new LinkedList<>();
         for(int k=0; k<8; k++)for(int l=0; l<9; l++)
-            if( probabilities[k][l] == 0 && map[k][l]==-1 ){
-                probabilities[k][l] = -1;
+            if( probabilities[k][l] == 0 && map[k][l]==-1 )
                 moves.add( new Point(k,l) );
-                return moves;
-            }
-            else if( probabilities[k][l] < minProbability && map[k][l]==-1 ){
+            else if( probabilities[k][l] < minProbability && map[k][l]==-1 )
                 minProbability = probabilities[k][l];
-            }
+        
+        if( !moves.isEmpty() )
+            return moves;
+        
         if( minProbability == 1 )
-            return null;
+            throw new GameHasEnded();
+        
         for(int k=0; k<8; k++)for(int l=0; l<9; l++)
             if( probabilities[k][l] == minProbability && map[k][l]==-1 ){
                 moves.add( new Point(k,l) );
@@ -123,7 +125,7 @@ public class Analizer {
                 return 0;
             for( Point neighbor : neighbors ){
                 probabilities[neighbor.x][neighbor.y] = 1;
-                int increment = 1;
+                int increment;
                 
                 if( missingBombs > 1 )
                     increment = calculateCombinationsForNumber(numberIndex);

@@ -113,16 +113,15 @@ public class ImageTest {
         try {
             Image img = new Image("images/testImage.png");
             Image instance = new Image("images/testSubImage.png");
-            Point expResult = null;
             Point result = instance.findSubImage(img);
-            assertEquals(expResult, result);
+            assertEquals(null, result);
         } catch (CantReadFile ex) {
             fail("Image should be loaded");
         }
     }
     
     @Test
-    public void ThrowExceptionIfFileDoesntExists() {
+    public void throwExceptionIfFileDoesntExists() {
         try {
             Image img = new Image("test.png");
             fail("should not be loaded");

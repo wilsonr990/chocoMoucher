@@ -80,7 +80,8 @@ public class Image {
                 int x = j % img.getWidth();
                 int y = j / img.getWidth();
                 
-                if (buffer.getRGB(X+x, Y+y) == img.getRGB(x,y)) {
+                if (buffer.getRGB(X+x, Y+y) == img.getRGB(x,y) 
+                        || img.getRGB(x,y) == Color.BLACK.getRGB()) {
                     validatedPixels++;
                     if (validatedPixels == imgSize)
                         return new Point(X,Y);

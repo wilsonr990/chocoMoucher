@@ -1,15 +1,10 @@
 package chocomoucher;
 
-import java.awt.AWTException;
-import java.awt.Point;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author wilsonr
  */
-public class main {
+public class Main {
     
     static public void printMap( char[] map){
         int count = 0;

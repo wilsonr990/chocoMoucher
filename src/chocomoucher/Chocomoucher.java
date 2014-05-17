@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  * @author wilsonr
  */
 class Chocomoucher {
-    private ChocoMouche game;
+    private final ChocoMouche game;
     private boolean alive;
-    private int[][] map, probs;
+    private int[][] map;
     private int lives;
     private Analizer analizer;
     
@@ -33,7 +33,7 @@ class Chocomoucher {
         alive = true;
         
         try {
-            game.Start();
+            game.start();
         } catch ( NoOpenGame | GameIsLocked ex) {
             System.out.println("Game Is Not Ready");
             alive = false;
@@ -48,7 +48,7 @@ class Chocomoucher {
             alive =false;
     }
     
-    private Point decideNextMove() {
+    private Point decideNextMove() throws GameHasEnded {
         analizer.findProbabilities();
         List<Point> moves = analizer.bestMove();
         
@@ -78,26 +78,16 @@ class Chocomoucher {
                 
                 updateLastMove(move);
                 System.out.println("sdasdasd");
-            } catch (NoOpenGame ex) {
-                
+            } catch ( NoOpenGame ex ) {
+                System.out.println("Game seems to be locked" );
             } catch (GameIsLocked ex) {
-                
+                System.out.println("Game seems to be Locked" );
+            } catch (GameHasEnded ex) {
+                System.out.println("Game has ended" );
             }
         }
     }
-
-    private void move(final Point move) {
-        try{
-            game.clickOn( move );
-        }catch( NoOpenGame | GameIsLocked ex) {
-            if ( analizer.hasEnded() ){
-                System.out.println("restarting...");
-                restartGame();
-            }else{
-                alive = false;
-            }
-        }
-    }
+    
     public void printMap(){
         if( map != null ){
             int count = 0;
