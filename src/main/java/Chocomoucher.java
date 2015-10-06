@@ -4,12 +4,8 @@
  * and open the template in the editor.
  */
 
-package chocomoucher;
-
 import java.awt.Point;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -34,8 +30,11 @@ class Chocomoucher {
         
         try {
             game.start();
-        } catch ( NoOpenGame | GameIsLocked ex) {
+        } catch ( GameIsLocked ex) {
             System.out.println("Game Is Not Ready");
+            alive = false;
+        } catch (NoOpenGame ex) {
+            System.out.println("Game Is Not Open");
             alive = false;
         }
     }
@@ -90,7 +89,6 @@ class Chocomoucher {
     
     public void printMap(){
         if( map != null ){
-            int count = 0;
             for( int i=0; i<8; i++){
                 for( int j=0; j<9; j++){
                     System.out.print( map[i][j] +"("+analizer.probabilities[i][j]+")" +", " );

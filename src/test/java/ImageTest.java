@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 
-package chocomoucher;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -44,7 +42,7 @@ public class ImageTest {
     @Test
     public void testGetWidth() {
         try {
-            Image instance = new Image("images/test.png");
+            Image instance = new Image("test.png");
             int expResult = 2;
             int result = instance.getWidth();
             assertEquals(expResult, result);
@@ -56,7 +54,7 @@ public class ImageTest {
     @Test
     public void testGetHeight() {
         try {
-            Image instance = new Image("images/test.png");
+            Image instance = new Image("test.png");
             int expResult = 2;
             int result = instance.getHeight();
             assertEquals(expResult, result);
@@ -68,7 +66,7 @@ public class ImageTest {
     @Test
     public void testGetRGB() {
         try {
-            Image instance = new Image("images/test.png");
+            Image instance = new Image("test.png");
             int result = instance.getRGB(0, 0);
             assertEquals( Color.WHITE.getRGB(), result);
             result = instance.getRGB(1, 1);
@@ -86,7 +84,7 @@ public class ImageTest {
     public void testGetDimension() {
         try {
             System.out.println("getDimension");
-            Image instance = new Image("images/test.png");
+            Image instance = new Image("test.png");
             Dimension expResult = new Dimension(2, 2);
             Dimension result = instance.getDimension();
             assertEquals(expResult, result);
@@ -98,8 +96,8 @@ public class ImageTest {
     @Test
     public void testFindSubImage() {
         try {
-            Image img = new Image("images/testSubImage.png");
-            Image instance = new Image("images/testImage.png");
+            Image img = new Image("testSubImage.png");
+            Image instance = new Image("testImage.png");
             Point expResult = new Point(5,5);
             Point result = instance.findSubImage(img);
             assertEquals(expResult, result);
@@ -111,8 +109,8 @@ public class ImageTest {
     @Test
     public void testFindSubImageReturnNullIfImgIsNotFoundInInstance() {
         try {
-            Image img = new Image("images/testImage.png");
-            Image instance = new Image("images/testSubImage.png");
+            Image img = new Image("testImage.png");
+            Image instance = new Image("testSubImage.png");
             Point result = instance.findSubImage(img);
             assertEquals(null, result);
         } catch (CantReadFile ex) {
@@ -123,7 +121,7 @@ public class ImageTest {
     @Test
     public void throwExceptionIfFileDoesntExists() {
         try {
-            Image img = new Image("test.png");
+            Image img = new Image("nonExistantImage.png");
             fail("should not be loaded");
         } catch (CantReadFile ex) {
             assertTrue("Image doesntExists", true);

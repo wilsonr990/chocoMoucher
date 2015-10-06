@@ -1,6 +1,3 @@
-
-package chocomoucher;
-
 /**
  *
  * @author wilsonr

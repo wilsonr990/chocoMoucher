@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 
-package chocomoucher;
-
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class Analizer {
     Analizer(){
         this.probabilities = new double[8][9];
         this.ocurrencesOfMines = null;
-        this.numbers = new LinkedList<>();
+        this.numbers = new LinkedList<Point>();
         
         map = new int[8][9];
         for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ ){
@@ -67,7 +65,7 @@ public class Analizer {
     
     List<Point> bestMove( ) throws GameHasEnded {
         double minProbability = 2;
-        LinkedList<Point> moves = new LinkedList<>();
+        LinkedList<Point> moves = new LinkedList<Point>();
         for(int k=0; k<8; k++)for(int l=0; l<9; l++)
             if( probabilities[k][l] == 0 && map[k][l]==-1 )
                 moves.add( new Point(k,l) );
@@ -106,7 +104,7 @@ public class Analizer {
     private int calculateCombinationsForNumber(int numberIndex) {
         Point numberPos = numbers.get(numberIndex);
         int numberOfCombinations = 0;
-        List<Point> neighbors = new LinkedList<>();
+        List<Point> neighbors = new LinkedList<Point>();
         int missingBombs;
         
         missingBombs = findNeighborsAndMissingBombs(numberPos, neighbors);
