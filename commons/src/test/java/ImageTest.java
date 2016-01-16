@@ -4,14 +4,11 @@
  * and open the template in the editor.
  */
 
+import org.junit.*;
+
 import java.awt.*;
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
@@ -132,14 +129,13 @@ public class ImageTest {
     public void saveImageInDisk() {
         try {
             int i = 0;
-            while(true) {
-                Image img = new Image((Rectangle) (null));
-                img.saveImage("saved"+ i++ + ".png");
-                Thread.sleep(100);
-            }
+            Image img = new Image((Rectangle) (null));
+            img.saveImage("saved"+ i++ + ".png");
         } catch (CantCaptureScreen ignored) {
+            Assert.assertTrue(false);
         } catch (IOException ignored) {
-        } catch (InterruptedException e) {
+            Assert.assertTrue(false);
         }
+        Assert.assertTrue(true);
     }
 }

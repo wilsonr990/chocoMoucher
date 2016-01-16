@@ -19,6 +19,8 @@ public class MainView extends JFrame {
     private JPanel mainPanel;
 
     public MainView() {
+        controller = new MainController(this);
+
         setTitle("Game Recorder");
         setSize(400, 400);
         setLayout(new GridLayout(3, 1));
@@ -29,15 +31,10 @@ public class MainView extends JFrame {
             }
         });
         add(mainPanel);
-        controller = new MainController(this);
     }
 
     public void start() {
         status.setText("Control in action: Button");
-
-        okButton.setActionCommand("OK");
-        submitButton.setActionCommand("Submit");
-        cancelButton.setActionCommand("Cancel");
 
         okButton.addActionListener(controller);
         submitButton.addActionListener(controller);

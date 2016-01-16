@@ -3,13 +3,9 @@ package controllers;
 import views.MainView;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Created by wilsonr on 1/16/2016.
- */
 public class MainController implements ActionListener {
     private final JFrame view;
     private String status;

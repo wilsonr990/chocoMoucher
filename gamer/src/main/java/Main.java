@@ -19,13 +19,13 @@ public class Main {
     }
     
     public static void main(String[] args) throws CantCaptureScreen, IOException {
-//        int i=0;
-//        while (true){
-//            Rectangle rectangle = null;
-//            Image image = new Image(rectangle);
-//            image.saveImage("img" + i++ + ".png");
-//        }
-        playGame();
+        int i=0;
+        while (true){
+            Rectangle rectangle = null;
+            Image image = new Image(rectangle);
+            image.saveImage("img" + i++ + ".png");
+        }
+//        playGame();
     }
 
     private static void playGame() {
