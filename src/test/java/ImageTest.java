@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -127,5 +127,19 @@ public class ImageTest {
             assertTrue("Image doesntExists", true);
         }
     }
-    
+
+    @Test
+    public void saveImageInDisk() {
+        try {
+            int i = 0;
+            while(true) {
+                Image img = new Image((Rectangle) (null));
+                img.saveImage("saved"+ i++ + ".png");
+                Thread.sleep(100);
+            }
+        } catch (CantCaptureScreen ignored) {
+        } catch (IOException ignored) {
+        } catch (InterruptedException e) {
+        }
+    }
 }

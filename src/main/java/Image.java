@@ -12,10 +12,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import javax.imageio.ImageIO;
 
@@ -98,5 +95,10 @@ public class Image {
             }
         }
         return null;
+    }
+
+    public void saveImage(String name) throws IOException {
+        File outputfile = new File(name);
+        ImageIO.write(buffer, "png", outputfile);
     }
 }
