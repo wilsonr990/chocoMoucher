@@ -1,26 +1,24 @@
 package views;
 
-import controllers.MainController;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-/**
- * Created by wilsonr on 1/16/2016.
- */
+import static controllers.MainController.Actions.SetPath;
+import static controllers.MainController.Actions.StartRec;
+import static controllers.MainController.Actions.StopRec;
+
 public class MainView extends JFrame {
-    private final MainController controller;
-    private JButton okButton;
-    private JButton submitButton;
-    private JButton cancelButton;
-    private JLabel status;
+    private ActionListener controller;
+    private JButton setPathButton;
+    private JButton startRecButton;
+    private JButton stopRecButton;
     private JPanel mainPanel;
+    private JTextField pathLabel;
 
     public MainView() {
-        controller = new MainController(this);
-
         setTitle("Game Recorder");
         setSize(400, 400);
         setLayout(new GridLayout(3, 1));
@@ -31,21 +29,27 @@ public class MainView extends JFrame {
             }
         });
         add(mainPanel);
-    }
 
-    public void start() {
-        status.setText("Control in action: Button");
-
-        okButton.addActionListener(controller);
-        submitButton.addActionListener(controller);
-        cancelButton.addActionListener(controller);
+        setPathButton.setActionCommand(SetPath.name());
+        startRecButton.setActionCommand(StartRec.name());
+        stopRecButton.setActionCommand(StopRec.name());
 
         setVisible(true);
     }
 
     public void repaint() {
-        status.setText(controller.getStatus());
         super.repaint();
+    }
+
+    public void setController(ActionListener controller) {
+        this.controller = controller;
+        setPathButton.addActionListener(controller);
+        startRecButton.addActionListener(controller);
+        stopRecButton.addActionListener(controller);
+    }
+
+    public String getPathLabel() {
+        return pathLabel.getText();
     }
 }
 

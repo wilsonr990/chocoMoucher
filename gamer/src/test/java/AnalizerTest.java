@@ -5,6 +5,8 @@
  */
 
 import java.awt.Point;
+
+import Exceptions.GameHasEnded;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

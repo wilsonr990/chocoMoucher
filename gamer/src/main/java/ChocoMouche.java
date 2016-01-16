@@ -1,3 +1,9 @@
+import Exceptions.CantCaptureScreen;
+import Exceptions.CantReadFile;
+import Exceptions.GameIsLocked;
+import Exceptions.NoOpenGame;
+import Image.Image;
+
 import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -116,10 +122,10 @@ public class ChocoMouche{
             images.put("2", new Image( "2.png" ) );
             images.put("3", new Image( "3.png" ) );
             images.put("4", new Image( "4.png" ) );
-            /*images.put("5", new Image( "images/5.png" ) );
-            images.put("6", new Image( "images/6.png" ) );
-            images.put("7", new Image( "images/7.png" ) );
-            images.put("8", new Image( "images/8.png" ) );*/
+            /*images.put("5", new Image.Image( "images/5.png" ) );
+            images.put("6", new Image.Image( "images/6.png" ) );
+            images.put("7", new Image.Image( "images/7.png" ) );
+            images.put("8", new Image.Image( "images/8.png" ) );*/
         } catch (CantReadFile ex) {
             System.err.println("Can´t Load Images");
         }

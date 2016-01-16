@@ -1,4 +1,6 @@
-import java.awt.*;
+import Exceptions.CantCaptureScreen;
+import Exceptions.NoOpenGame;
+
 import java.io.IOException;
 
 /**
@@ -20,11 +22,6 @@ public class Main {
     
     public static void main(String[] args) throws CantCaptureScreen, IOException {
         int i=0;
-        while (true){
-            Rectangle rectangle = null;
-            Image image = new Image(rectangle);
-            image.saveImage("img" + i++ + ".png");
-        }
 //        playGame();
     }
 

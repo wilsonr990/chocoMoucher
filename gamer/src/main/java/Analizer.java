@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+import Exceptions.GameHasEnded;
+
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;

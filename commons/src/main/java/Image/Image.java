@@ -1,8 +1,12 @@
+package Image;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+import Exceptions.CantCaptureScreen;
+import Exceptions.CantReadFile;
 
 import java.awt.AWTException;
 import java.awt.Color;
@@ -23,7 +27,7 @@ import javax.imageio.ImageIO;
 public class Image {
     BufferedImage buffer;
 
-    Image(Rectangle screenRectangle) throws CantCaptureScreen {
+    public Image(Rectangle screenRectangle) throws CantCaptureScreen {
         try {
             Robot r = new Robot();
             if (screenRectangle == null) {
@@ -37,7 +41,7 @@ public class Image {
         }
     }
 
-    Image(String url) throws CantReadFile {
+    public Image(String url) throws CantReadFile {
         try {
             URL resource = getClass().getClassLoader().getResource(url);
             if (resource != null) {

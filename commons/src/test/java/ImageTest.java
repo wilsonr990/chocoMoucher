@@ -4,10 +4,13 @@
  * and open the template in the editor.
  */
 
+import Exceptions.CantCaptureScreen;
+import Exceptions.CantReadFile;
 import org.junit.*;
 
 import java.awt.*;
 import java.io.IOException;
+import Image.Image;
 
 import static org.junit.Assert.*;
 
@@ -93,8 +96,8 @@ public class ImageTest {
     @Test
     public void testFindSubImage() {
         try {
-            Image img = new Image("testSubImage.png");
-            Image instance = new Image("testImage.png");
+            Image img = new Image("testSubpng");
+            Image instance = new Image("testpng");
             Point expResult = new Point(5,5);
             Point result = instance.findSubImage(img);
             assertEquals(expResult, result);
@@ -106,8 +109,8 @@ public class ImageTest {
     @Test
     public void testFindSubImageReturnNullIfImgIsNotFoundInInstance() {
         try {
-            Image img = new Image("testImage.png");
-            Image instance = new Image("testSubImage.png");
+            Image img = new Image("testpng");
+            Image instance = new Image("testSubpng");
             Point result = instance.findSubImage(img);
             assertEquals(null, result);
         } catch (CantReadFile ex) {
@@ -118,7 +121,7 @@ public class ImageTest {
     @Test
     public void throwExceptionIfFileDoesntExists() {
         try {
-            Image img = new Image("nonExistantImage.png");
+            Image img = new Image("nonExistantpng");
             fail("should not be loaded");
         } catch (CantReadFile ex) {
             assertTrue("Image doesntExists", true);

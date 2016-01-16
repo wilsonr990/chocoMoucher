@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 
+import Exceptions.GameHasEnded;
+import Exceptions.GameIsLocked;
+import Exceptions.NoOpenGame;
+
 import java.awt.Point;
 import java.util.List;
 
