@@ -1,21 +1,21 @@
 package views;
 
+import controllers.MainController;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import static controllers.MainController.Actions.SetPath;
 import static controllers.MainController.Actions.StartRec;
 import static controllers.MainController.Actions.StopRec;
 
 public class MainView extends JFrame {
-    private JButton setPathButton;
     private JButton startRecButton;
     private JButton stopRecButton;
     private JPanel mainPanel;
-    private JTextField pathLabel;
+    private JTextField gameLabel;
+    private JLabel pathLabel;
 
     public MainView() {
         setTitle("Game Recorder");
@@ -29,7 +29,6 @@ public class MainView extends JFrame {
         });
         add(mainPanel);
 
-        setPathButton.setActionCommand(SetPath.name());
         startRecButton.setActionCommand(StartRec.name());
         stopRecButton.setActionCommand(StopRec.name());
 
@@ -40,14 +39,22 @@ public class MainView extends JFrame {
         super.repaint();
     }
 
-    public void setController(ActionListener controller) {
-        setPathButton.addActionListener(controller);
+    public void setController(MainController controller) {
         startRecButton.addActionListener(controller);
         stopRecButton.addActionListener(controller);
+        gameLabel.addKeyListener(controller);
     }
 
-    public String getPathLabel() {
-        return pathLabel.getText();
+    public String getGameLabel() {
+        return gameLabel.getText();
+    }
+
+    public void setGameLabel(String path) {
+        gameLabel.setText( path );
+    }
+
+    public void setPathLabel(String pathLabel) {
+        this.pathLabel.setText( pathLabel );
     }
 }
 
