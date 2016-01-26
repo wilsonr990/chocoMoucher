@@ -7,6 +7,7 @@ package Image;
 
 import Exceptions.CantCaptureScreen;
 import Exceptions.CantReadFile;
+import Exceptions.FileAlreadyExists;
 
 import java.awt.AWTException;
 import java.awt.Color;
@@ -101,8 +102,11 @@ public class Image {
         return null;
     }
 
-    public void saveImage(String name) throws IOException {
+    public void saveImage(String name) throws IOException, FileAlreadyExists {
         File outputfile = new File(name);
+        if( outputfile.isFile() ) {
+            throw new FileAlreadyExists();
+        }
         ImageIO.write(buffer, "png", outputfile);
     }
 }

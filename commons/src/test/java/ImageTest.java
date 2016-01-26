@@ -6,9 +6,11 @@
 
 import Exceptions.CantCaptureScreen;
 import Exceptions.CantReadFile;
+import Exceptions.FileAlreadyExists;
 import org.junit.*;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import Image.Image;
 
@@ -19,25 +21,6 @@ import static org.junit.Assert.*;
  * @author wilsonr
  */
 public class ImageTest {
-    
-    public ImageTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testGetWidth() {
@@ -96,8 +79,8 @@ public class ImageTest {
     @Test
     public void testFindSubImage() {
         try {
-            Image img = new Image("testSubpng");
-            Image instance = new Image("testpng");
+            Image img = new Image("testSubImage.png");
+            Image instance = new Image("testImage.png");
             Point expResult = new Point(5,5);
             Point result = instance.findSubImage(img);
             assertEquals(expResult, result);
@@ -109,8 +92,8 @@ public class ImageTest {
     @Test
     public void testFindSubImageReturnNullIfImgIsNotFoundInInstance() {
         try {
-            Image img = new Image("testpng");
-            Image instance = new Image("testSubpng");
+            Image img = new Image("testImage.png");
+            Image instance = new Image("testSubImage.png");
             Point result = instance.findSubImage(img);
             assertEquals(null, result);
         } catch (CantReadFile ex) {
@@ -130,15 +113,26 @@ public class ImageTest {
 
     @Test
     public void saveImageInDisk() {
+        String name = "saved.png";
         try {
-            int i = 0;
             Image img = new Image((Rectangle) (null));
-            img.saveImage("saved"+ i++ + ".png");
+            img.saveImage(name);
         } catch (CantCaptureScreen ignored) {
             Assert.assertTrue(false);
         } catch (IOException ignored) {
             Assert.assertTrue(false);
+        } catch (FileAlreadyExists fileAlreadyExists) {
+            Assert.assertTrue(false);
         }
-        Assert.assertTrue(true);
+        try {
+            Image img = new Image((Rectangle) (null));
+            img.saveImage(name);
+        } catch (CantCaptureScreen ignored) {
+            Assert.assertTrue(false);
+        } catch (IOException ignored) {
+            Assert.assertTrue(false);
+        } catch (FileAlreadyExists fileAlreadyExists) {
+            Assert.assertTrue( new File(name).delete() );
+        }
     }
 }

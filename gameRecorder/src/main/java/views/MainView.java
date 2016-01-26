@@ -11,7 +11,6 @@ import static controllers.MainController.Actions.StartRec;
 import static controllers.MainController.Actions.StopRec;
 
 public class MainView extends JFrame {
-    private ActionListener controller;
     private JButton setPathButton;
     private JButton startRecButton;
     private JButton stopRecButton;
@@ -42,7 +41,6 @@ public class MainView extends JFrame {
     }
 
     public void setController(ActionListener controller) {
-        this.controller = controller;
         setPathButton.addActionListener(controller);
         startRecButton.addActionListener(controller);
         stopRecButton.addActionListener(controller);
