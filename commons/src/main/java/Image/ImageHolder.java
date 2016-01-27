@@ -58,6 +58,7 @@ public class ImageHolder {
     }
 
     public ImageHolder() {
+        buffer = new BufferedImage ( 1, 1, BufferedImage.TYPE_INT_ARGB );
     }
 
     public int getWidth() {
@@ -84,9 +85,12 @@ public class ImageHolder {
 
         int validatedPixels = 0;
         int imgSize = img.getWidth() * img.getHeight();
-        for (int i = 0; i < widthDiference * heigthDiference; i++) {
-            int X = i % widthDiference;
-            int Y = i / widthDiference;
+        for (int i = 0; i <= widthDiference * heigthDiference; i++) {
+            int X = 0, Y = 0;
+            if(widthDiference!=0) {
+                X = i % widthDiference;
+                Y = i / widthDiference;
+            }
             for (int j = 0; j < imgSize; j++) {
                 int x = j % img.getWidth();
                 int y = j / img.getWidth();
@@ -111,5 +115,9 @@ public class ImageHolder {
             throw new FileAlreadyExists();
         }
         ImageIO.write(buffer, "png", outputfile);
+    }
+
+    public void getSubImage(Rectangle rectangle) {
+        buffer = buffer.getSubimage(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
 }
