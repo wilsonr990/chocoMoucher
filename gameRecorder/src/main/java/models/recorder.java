@@ -1,9 +1,11 @@
 package models;
 
 import Exceptions.CantCaptureScreen;
+import Exceptions.CantReadFile;
 import Exceptions.FileAlreadyExists;
+import Image.ImageHolder;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,13 +16,38 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class Recorder {
     private Thread thread;
-    private String pathName = "data";
+    private String dataPath = "data";
     private boolean gameNameSet = false;
+    private Point gameLocation;
+    private Dimension gameDimension;
 
     public void startRecording() {
         System.out.println("Start");
         if (thread == null || !thread.isAlive()) {
+            if (!gameNameSet) {
+                showMessageDialog(null, "Game should not be empty");
+                return;
+            }
+            if (!detectGame()) {
+                showMessageDialog(null, "Game not detected");
+                return;
+            }
+
             initializeThread();
+        }
+    }
+
+    private boolean detectGame() {
+        try {
+            ImageHolder image = new ImageHolder((Rectangle)null);
+            ImageHolder base = new ImageHolder("base.png");
+            gameLocation = image.findSubImage(base);
+            gameDimension = base.getDimension();
+            return gameLocation!=null;
+        } catch (CantCaptureScreen cantCaptureScreen) {
+            return false;
+        } catch (CantReadFile cantReadFile) {
+            return false;
         }
     }
 
@@ -30,41 +57,38 @@ public class Recorder {
     }
 
     private void initializeThread() {
-        if (!gameNameSet) {
-            showMessageDialog(null, "Game should not be empty");
-            return;
-        }
-
-        File file = new File(pathName);
+        File file = new File(dataPath);
         if (!file.exists()) {
             file.mkdir();
         }
 
-        file = new File(pathName + 'a' + "0.png");
+        file = new File(dataPath + 'a' + "0.png");
         char c;
         for (c = 'a'; file.exists() && c < 'z'; ) {
-            file = new File(pathName + ++c + "0.png");
+            file = new File(dataPath + ++c + "0.png");
         }
 
-        final File finalFile = new File(pathName + c);
+        final File finalFile = new File(dataPath + c);
         thread = new Thread() {
             @Override
             public void run() {
                 int i = 0;
-                while (!isInterrupted()) {
+                ImageHolder oldImage = new ImageHolder();
+                while (!isInterrupted() && detectGame()) {
                     try {
-                        Rectangle rectangle = null;
-                        Image.Image image = new Image.Image(rectangle);
+                        Rectangle rectangle = new Rectangle(gameLocation, gameDimension);
+                        ImageHolder image = new ImageHolder(rectangle);
                         image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (CantCaptureScreen cantCaptureScreen) {
                         cantCaptureScreen.printStackTrace();
                     } catch (FileAlreadyExists fileAlreadyExists) {
-                        showMessageDialog(null, "The path already exists! ( " + pathName + " )");
+                        showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
                         return;
                     }
                 }
+                showMessageDialog(null, "Recording Ended");
             }
         };
         thread.start();
@@ -73,7 +97,7 @@ public class Recorder {
     public void setGameToRecord(String gameLabel) {
         System.out.println("SetPath");
         if(!gameLabel.isEmpty()) {
-            pathName = "data\\" + gameLabel + "\\";
+            dataPath = "data\\" + gameLabel + "\\";
             gameNameSet = true;
         }
         else
@@ -81,6 +105,6 @@ public class Recorder {
     }
 
     public String getDataPath() {
-        return pathName;
+        return dataPath;
     }
 }

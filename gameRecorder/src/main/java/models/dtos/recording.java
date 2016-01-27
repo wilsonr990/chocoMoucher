@@ -1,6 +1,6 @@
 package models.dtos;
 
-import Image.Image;
+import Image.ImageHolder;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ public class recording {
     public recording() {
     }
 
-    List<Image> images;
+    List<ImageHolder> images;
 }

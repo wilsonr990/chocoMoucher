@@ -25,10 +25,10 @@ import javax.imageio.ImageIO;
  * @author wilsonr
  */
 
-public class Image {
+public class ImageHolder {
     BufferedImage buffer;
 
-    public Image(Rectangle screenRectangle) throws CantCaptureScreen {
+    public ImageHolder(Rectangle screenRectangle) throws CantCaptureScreen {
         try {
             Robot r = new Robot();
             if (screenRectangle == null) {
@@ -42,7 +42,7 @@ public class Image {
         }
     }
 
-    public Image(String url) throws CantReadFile {
+    public ImageHolder(String url) throws CantReadFile {
         try {
             URL resource = getClass().getClassLoader().getResource(url);
             if (resource != null) {
@@ -55,6 +55,9 @@ public class Image {
         } catch (IOException e) {
             throw new CantReadFile();
         }
+    }
+
+    public ImageHolder() {
     }
 
     public int getWidth() {
@@ -73,7 +76,7 @@ public class Image {
         return new Dimension(buffer.getWidth(), buffer.getHeight());
     }
 
-    public Point findSubImage(Image img) {
+    public Point findSubImage(ImageHolder img) {
         int widthDiference = buffer.getWidth() - img.getWidth();
         int heigthDiference = buffer.getHeight() - img.getHeight();
         if (widthDiference < 0 || heigthDiference < 0)

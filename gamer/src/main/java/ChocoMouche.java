@@ -2,7 +2,7 @@ import Exceptions.CantCaptureScreen;
 import Exceptions.CantReadFile;
 import Exceptions.GameIsLocked;
 import Exceptions.NoOpenGame;
-import Image.Image;
+import Image.ImageHolder;
 
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 public class ChocoMouche{
     private Robot r;
-    private HashMap<String, Image> images;
+    private HashMap<String, ImageHolder> images;
     private Point gameLocation, mapLocation;
     private Dimension mapDimension, gameDimension, cellDimension;
     private int[][] map;
@@ -36,7 +36,7 @@ public class ChocoMouche{
                 }
             }
             
-            images = new HashMap<String, Image>();
+            images = new HashMap<String, ImageHolder>();
             readImages();
             
             gameLocation = getGameLocation();
@@ -113,15 +113,15 @@ public class ChocoMouche{
 
     private void readImages(){
         try {
-            images.put("base", new Image( "idImage.png" ) );
-            images.put("map", new Image( "map.png" ) );
-            images.put("fly", new Image( "fly.png" ) );
-            images.put("fly2", new Image( "fly2.png" ) );
-            images.put("cell", new Image( "cell.png" ) );
-            images.put("1", new Image( "1.png" ) );
-            images.put("2", new Image( "2.png" ) );
-            images.put("3", new Image( "3.png" ) );
-            images.put("4", new Image( "4.png" ) );
+            images.put("base", new ImageHolder("idImage.png") );
+            images.put("map", new ImageHolder( "map.png" ) );
+            images.put("fly", new ImageHolder( "fly.png" ) );
+            images.put("fly2", new ImageHolder( "fly2.png" ) );
+            images.put("cell", new ImageHolder( "cell.png" ) );
+            images.put("1", new ImageHolder( "1.png" ) );
+            images.put("2", new ImageHolder( "2.png" ) );
+            images.put("3", new ImageHolder( "3.png" ) );
+            images.put("4", new ImageHolder( "4.png" ) );
             /*images.put("5", new Image.Image( "images/5.png" ) );
             images.put("6", new Image.Image( "images/6.png" ) );
             images.put("7", new Image.Image( "images/7.png" ) );
@@ -134,9 +134,9 @@ public class ChocoMouche{
     private Point getGameLocation() throws NoOpenGame {
         try {
             Point location;
-            Image screenImg;
+            ImageHolder screenImg;
             
-            screenImg = new Image( (Rectangle)(null) );
+            screenImg = new ImageHolder( (Rectangle)(null) );
             location = screenImg.findSubImage(images.get("base"));
             
             if(location != null)
@@ -151,9 +151,9 @@ public class ChocoMouche{
     private Point getMapLocation() throws GameIsLocked {
         try {
             Point location;
-            Image screenImg;
+            ImageHolder screenImg;
             
-            screenImg = new Image( new Rectangle(gameLocation, gameDimension) );
+            screenImg = new ImageHolder( new Rectangle(gameLocation, gameDimension) );
             location = screenImg.findSubImage(images.get("map"));
             
             if(location != null)
@@ -167,14 +167,14 @@ public class ChocoMouche{
     
     private void updateMap(Point p) throws GameIsLocked {
         try {
-            Image screenImg;
+            ImageHolder screenImg;
             Point cellPosition;
             
             int cellPositionX = (int) (gameLocation.x + mapLocation.x + p.x*cellDimension.getWidth());
             int cellPositionY = (int) (gameLocation.y + mapLocation.y + p.y*cellDimension.getHeight());
             cellPosition = new Point(cellPositionX, cellPositionY);
             
-            screenImg = new Image( new Rectangle(cellPosition, cellDimension) );
+            screenImg = new ImageHolder( new Rectangle(cellPosition, cellDimension) );
             
             if(screenImg.findSubImage(images.get("1"))!=null )
                 map[p.x][p.y] = 1;
