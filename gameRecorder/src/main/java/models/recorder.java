@@ -72,20 +72,23 @@ public class Recorder {
         thread = new Thread() {
             @Override
             public void run() {
-                int i = 0;
+                int i = 0, j=0;
                 ImageHolder oldImage = new ImageHolder();
                 while (!isInterrupted() && detectGame()) {
                     try {
                         Rectangle rectangle = new Rectangle(gameLocation, gameDimension);
                         ImageHolder image = new ImageHolder(rectangle);
-                        image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
+                        if(oldImage.findSubImage(image)==null) {
+                            image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
+                        }
+                        oldImage = new ImageHolder(rectangle);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        break;
                     } catch (CantCaptureScreen cantCaptureScreen) {
                         cantCaptureScreen.printStackTrace();
                     } catch (FileAlreadyExists fileAlreadyExists) {
                         showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
-                        return;
+                        break;
                     }
                 }
                 showMessageDialog(null, "Recording Ended");
