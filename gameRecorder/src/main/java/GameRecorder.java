@@ -1,12 +1,12 @@
 
 import controllers.MainController;
-import models.Recorder;
+import models.RecorderLogic;
 import views.MainView;
 
 public class GameRecorder {
     public static void main(String[] args) {
         MainView mainView = new MainView();
-        Recorder recorder = new Recorder();
+        RecorderLogic recorder = new RecorderLogic();
         MainController controller = new MainController(mainView, recorder);
 
         mainView.setController(controller);

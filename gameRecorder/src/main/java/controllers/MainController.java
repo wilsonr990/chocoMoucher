@@ -1,6 +1,6 @@
 package controllers;
 
-import models.Recorder;
+import models.RecorderLogic;
 import views.MainView;
 
 import java.awt.event.ActionEvent;
@@ -18,9 +18,9 @@ public class MainController implements ActionListener, KeyListener {
     }
 
     private MainView mainView;
-    private Recorder recorder;
+    private RecorderLogic recorder;
 
-    public MainController(MainView view, Recorder model) {
+    public MainController(MainView view, RecorderLogic model) {
         mainView = view;
         recorder = model;
 

@@ -14,7 +14,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 /**
  * Created by wilsonr on 1/26/2016.
  */
-public class Recorder {
+public class RecorderLogic {
     private Thread thread;
     private String dataPath = "data";
     private boolean gameNameSet = false;
