@@ -1,7 +1,7 @@
 package controllers;
 
-import models.RecorderLogic;
-import views.MainView;
+import models.Recorder;
+import views.RecorderView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,18 +9,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 
-import static controllers.MainController.Actions.StartRec;
-import static controllers.MainController.Actions.StopRec;
+import static controllers.RecorderController.Actions.StartRec;
+import static controllers.RecorderController.Actions.StopRec;
 
-public class MainController implements ActionListener, KeyListener {
+public class RecorderController implements ActionListener, KeyListener {
     public enum Actions {
         StartRec, StopRec
     }
 
-    private MainView mainView;
-    private RecorderLogic recorder;
+    private RecorderView mainView;
+    private Recorder recorder;
 
-    public MainController(MainView view, RecorderLogic model) {
+    public RecorderController(RecorderView view, Recorder model) {
         mainView = view;
         recorder = model;
 

@@ -14,7 +14,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 /**
  * Created by wilsonr on 1/26/2016.
  */
-public class RecorderLogic {
+public class Recorder {
     private Thread thread;
     private String dataPath = "data";
     private boolean gameNameSet = false;
@@ -28,24 +28,17 @@ public class RecorderLogic {
                 showMessageDialog(null, "Game should not be empty");
                 return;
             }
-            if (!detectGame()) {
-                showMessageDialog(null, "Game not detected");
-                return;
-            }
 
             initializeThread();
         }
     }
 
-    private boolean detectGame() {
+    private boolean detectGame(ImageHolder image) {
         try {
-            ImageHolder image = new ImageHolder((Rectangle)null);
             ImageHolder base = new ImageHolder("base.png");
             gameLocation = image.findSubImage(base);
             gameDimension = base.getDimension();
-            return gameLocation!=null;
-        } catch (CantCaptureScreen cantCaptureScreen) {
-            return false;
+            return gameLocation != null;
         } catch (CantReadFile cantReadFile) {
             return false;
         }
@@ -72,26 +65,30 @@ public class RecorderLogic {
         thread = new Thread() {
             @Override
             public void run() {
-                int i = 0, j=0;
-                ImageHolder oldImage = new ImageHolder();
-                while (!isInterrupted() && detectGame()) {
-                    try {
-                        Rectangle rectangle = new Rectangle(gameLocation, gameDimension);
-                        ImageHolder image = new ImageHolder(rectangle);
-                        if(oldImage.findSubImage(image)==null) {
+                try {
+                    int i = 0;
+                    ImageHolder oldImage = new ImageHolder();
+                    while (!isInterrupted()) {
+                        ImageHolder image = new ImageHolder((Rectangle) null);
+                        if( !detectGame(image) ) {
+                            showMessageDialog(null, "No game detected!");
+                            break;
+                        }
+
+                        image.getSubImage( new Rectangle(gameLocation, gameDimension) );
+                        if (oldImage.findSubImage(image) == null) {
                             image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
                         }
-                        oldImage = new ImageHolder(rectangle);
-                    } catch (IOException e) {
-                        break;
-                    } catch (CantCaptureScreen cantCaptureScreen) {
-                        cantCaptureScreen.printStackTrace();
-                    } catch (FileAlreadyExists fileAlreadyExists) {
-                        showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
-                        break;
+                        oldImage = image;
                     }
+                    showMessageDialog(null, "Recording Ended");
+                } catch (IOException e) {
+                    showMessageDialog(null, "Cant manage files!");
+                } catch (CantCaptureScreen cantCaptureScreen) {
+                    showMessageDialog(null, "Cannt capture screen!");
+                } catch (FileAlreadyExists fileAlreadyExists) {
+                    showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
                 }
-                showMessageDialog(null, "Recording Ended");
             }
         };
         thread.start();
@@ -99,11 +96,10 @@ public class RecorderLogic {
 
     public void setGameToRecord(String gameLabel) {
         System.out.println("SetPath");
-        if(!gameLabel.isEmpty()) {
+        if (!gameLabel.isEmpty()) {
             dataPath = "data\\" + gameLabel + "\\";
             gameNameSet = true;
-        }
-        else
+        } else
             gameNameSet = false;
     }
 

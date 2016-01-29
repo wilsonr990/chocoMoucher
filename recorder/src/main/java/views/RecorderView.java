@@ -1,23 +1,23 @@
 package views;
 
-import controllers.MainController;
+import controllers.RecorderController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import static controllers.MainController.Actions.StartRec;
-import static controllers.MainController.Actions.StopRec;
+import static controllers.RecorderController.Actions.StartRec;
+import static controllers.RecorderController.Actions.StopRec;
 
-public class MainView extends JFrame {
+public class RecorderView extends JFrame {
     private JButton startRecButton;
     private JButton stopRecButton;
     private JPanel mainPanel;
     private JTextField gameLabel;
     private JLabel pathLabel;
 
-    public MainView() {
+    public RecorderView() {
         setTitle("Game Recorder");
         setSize(400, 400);
         setLayout(new GridLayout(3, 1));
@@ -39,7 +39,7 @@ public class MainView extends JFrame {
         super.repaint();
     }
 
-    public void setController(MainController controller) {
+    public void setController(RecorderController controller) {
         startRecButton.addActionListener(controller);
         stopRecButton.addActionListener(controller);
         gameLabel.addKeyListener(controller);
