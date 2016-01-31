@@ -12,7 +12,8 @@
     <modules>
         <module>commons</module>
         <module>recorder</module>
-        <module>gamer</module>
+        <module>games</module>
+        <module>players</module>
     </modules>
 
 

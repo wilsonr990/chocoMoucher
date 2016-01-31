@@ -7,6 +7,7 @@
 import Exceptions.GameHasEnded;
 import Exceptions.GameIsLocked;
 import Exceptions.NoOpenGame;
+import models.ChocomoucherAnalizer;
 
 import java.awt.Point;
 import java.util.List;
@@ -15,21 +16,21 @@ import java.util.List;
  *
  * @author wilsonr
  */
-class Chocomoucher {
+class ChocomouchePlayer {
     private final ChocoMouche game;
     private boolean alive;
     private int[][] map;
     private int lives;
-    private Analizer analizer;
+    private ChocomoucherAnalizer chocomoucherAnalizer;
     
-    public Chocomoucher( ChocoMouche theGame ) {
+    public ChocomouchePlayer(ChocoMouche theGame ) {
         game = theGame;
         lives = 3;
         alive = true;
     }
 
     private void restartGame() {
-        analizer = new Analizer();
+        chocomoucherAnalizer = new ChocomoucherAnalizer();
         alive = true;
         
         try {
@@ -44,7 +45,7 @@ class Chocomoucher {
     }
 
     private void updateLastMove( Point lastMove) {
-        int val = analizer.update(lastMove, game.getMap());
+        int val = chocomoucherAnalizer.update(lastMove, game.getMap());
         if( val == 9 )
             lives--;
         if( lives==0 )
@@ -52,8 +53,8 @@ class Chocomoucher {
     }
     
     private Point decideNextMove() throws GameHasEnded {
-        analizer.findProbabilities();
-        List<Point> moves = analizer.bestMove();
+        chocomoucherAnalizer.findProbabilities();
+        List<Point> moves = chocomoucherAnalizer.bestMove();
         
         int random = (int)(Math.random() * (moves.size()-1));
         return moves.get(random);
@@ -75,7 +76,7 @@ class Chocomoucher {
                 
                 game.clickOn( move );
                 
-                if ( analizer.hasEnded() ){
+                if ( chocomoucherAnalizer.hasEnded() ){
                     continue;
                 }
                 
@@ -95,7 +96,7 @@ class Chocomoucher {
         if( map != null ){
             for( int i=0; i<8; i++){
                 for( int j=0; j<9; j++){
-                    System.out.print( map[i][j] +"("+analizer.probabilities[i][j]+")" +", " );
+                    System.out.print( map[i][j] +"("+ chocomoucherAnalizer.probabilities[i][j]+")" +", " );
                 }
                 System.out.print("\n");
             }

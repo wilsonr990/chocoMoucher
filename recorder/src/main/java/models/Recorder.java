@@ -1,7 +1,6 @@
 package models;
 
 import Exceptions.CantCaptureScreen;
-import Exceptions.CantReadFile;
 import Exceptions.FileAlreadyExists;
 import Image.ImageHolder;
 
@@ -18,8 +17,11 @@ public class Recorder {
     private Thread thread;
     private String dataPath = "data";
     private boolean gameNameSet = false;
-    private Point gameLocation;
-    private Dimension gameDimension;
+    private GameHandler gameHandler;
+
+    public Recorder(GameHandler gameHandler) {
+        this.gameHandler = gameHandler;
+    }
 
     public void startRecording() {
         System.out.println("Start");
@@ -30,17 +32,6 @@ public class Recorder {
             }
 
             initializeThread();
-        }
-    }
-
-    private boolean detectGame(ImageHolder image) {
-        try {
-            ImageHolder base = new ImageHolder("base.png");
-            gameLocation = image.findSubImage(base);
-            gameDimension = base.getDimension();
-            return gameLocation != null;
-        } catch (CantReadFile cantReadFile) {
-            return false;
         }
     }
 
@@ -70,12 +61,13 @@ public class Recorder {
                     ImageHolder oldImage = new ImageHolder();
                     while (!isInterrupted()) {
                         ImageHolder image = new ImageHolder((Rectangle) null);
-                        if( !detectGame(image) ) {
+                        gameHandler.feed(image);
+                        if( !gameHandler.gameDetected() ) {
                             showMessageDialog(null, "No game detected!");
                             break;
                         }
 
-                        image.getSubImage( new Rectangle(gameLocation, gameDimension) );
+                        image.getSubImage( new Rectangle(gameHandler.getLocation(), gameHandler.getDimension()) );
                         if (oldImage.findSubImage(image) == null) {
                             image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
                         }

@@ -1,4 +1,4 @@
-/*
+package models;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -14,14 +14,14 @@ import java.util.List;
  *
  * @author wilsonr
  */
-public class Analizer {
+public class ChocomoucherAnalizer {
     private int[][] map;
     private final List<Point> numbers;
     public double[][] probabilities;
     private int totalOfCombinations;
     private double[][] ocurrencesOfMines;
     
-    Analizer(){
+    public ChocomoucherAnalizer(){
         this.probabilities = new double[8][9];
         this.ocurrencesOfMines = null;
         this.numbers = new LinkedList<Point>();
@@ -46,7 +46,7 @@ public class Analizer {
         return map[lastMove.x][lastMove.y];
     }
     
-    double[][] findProbabilities( ) {
+    public double[][] findProbabilities() {
         totalOfCombinations = 0;
         ocurrencesOfMines = new double[8][9];
         for( int i=0; i<8; i++ )
@@ -65,7 +65,7 @@ public class Analizer {
         return probabilities;
     }
     
-    List<Point> bestMove( ) throws GameHasEnded {
+    public List<Point> bestMove() throws GameHasEnded {
         double minProbability = 2;
         LinkedList<Point> moves = new LinkedList<Point>();
         for(int k=0; k<8; k++)for(int l=0; l<9; l++)

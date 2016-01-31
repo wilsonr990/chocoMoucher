@@ -7,11 +7,9 @@
 import java.awt.Point;
 
 import Exceptions.GameHasEnded;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import models.ChocomoucherAnalizer;
+import org.junit.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -51,14 +49,14 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(0,0), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                assertEquals( result[i][j], p[i][j], 0.005);
+                Assert.assertEquals( result[i][j], p[i][j], 0.005);
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 
@@ -82,15 +80,15 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             a.update(new Point(0,0), map);
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(0,1), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                assertEquals( result[i][j], p[i][j], 0.01);
+                Assert.assertEquals( result[i][j], p[i][j], 0.01);
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 
@@ -114,7 +112,7 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
                     a.update( new Point(i,j), map );
@@ -122,9 +120,9 @@ public class AnalizerTest {
 
             assertEquals( new Point(0,1), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                assertEquals( result[i][j], p[i][j], 0.01);
+                Assert.assertEquals( result[i][j], p[i][j], 0.01);
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 
@@ -148,7 +146,7 @@ public class AnalizerTest {
                 {  0,  1,  0,0.5,0.5,0.5,  0,  0,  0},
                 {  0,  0,  1,0.5,0.5,0.5,  0,  0,  1}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
                     a.update( new Point(i,j), map );
@@ -156,9 +154,9 @@ public class AnalizerTest {
 
             assertEquals( new Point(1,0), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                assertEquals( result[i][j], p[i][j], 0.01);
+                Assert.assertEquals( result[i][j], p[i][j], 0.01);
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 
@@ -182,7 +180,7 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.2,0.2,0.2,0.5,0.5},
                 {0.5,0.5,0.5,0.5,  1,  0,0.2,0.5,0.5}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
                     a.update( new Point(i,j), map );
@@ -190,9 +188,9 @@ public class AnalizerTest {
 
             assertEquals( new Point(2,7), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                assertEquals( result[i][j], p[i][j], 0.05);
+                Assert.assertEquals( result[i][j], p[i][j], 0.05);
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 
@@ -216,7 +214,7 @@ public class AnalizerTest {
                 {0.3,0.3,0.5,0.5,  1,0.5,0.5,  0,  1},
                 {  0,0.3,0.5,0.5,  1,  0,  0,  0,  0}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
                     a.update( new Point(i,j), map );
@@ -224,9 +222,9 @@ public class AnalizerTest {
 
             assertEquals( new Point(6,7), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                assertEquals( result[i][j], p[i][j], 0.04);
+                Assert.assertEquals( result[i][j], p[i][j], 0.04);
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 
@@ -250,7 +248,7 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.2,0.2,  0,  0},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.8,  0,  0}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             a.update( new Point(0,0), map );
             a.update( new Point(7,8), map );
             a.update( new Point(5,6), map );
@@ -259,10 +257,10 @@ public class AnalizerTest {
             assertEquals( new Point(0,4), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ ){
                 System.out.println(i+" "+j);
-                assertEquals( result[i][j], p[i][j], 0.04);
+                Assert.assertEquals( result[i][j], p[i][j], 0.04);
             }
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 
@@ -286,16 +284,16 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            Analizer a = new Analizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
             a.update( new Point(0,0), map );
             a.update( new Point(2,2), map );
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(1,2), a.bestMove().get(0));
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                assertEquals( result[i][j], p[i][j], 0.04);
+                Assert.assertEquals( result[i][j], p[i][j], 0.04);
         } catch (GameHasEnded ex) {
-            fail( "Game Must not have ended" );
+            Assert.fail( "Game Must not have ended" );
         }
     }
 }

@@ -58,7 +58,21 @@ public class ImageHolder {
     }
 
     public ImageHolder() {
-        buffer = new BufferedImage ( 1, 1, BufferedImage.TYPE_INT_ARGB );
+        buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    }
+
+    public ImageHolder(int w, int h) {
+        buffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    }
+
+    public ImageHolder(File file) throws CantReadFile {
+        try {
+            buffer = ImageIO.read(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new CantReadFile();
+        } catch (IOException e) {
+            throw new CantReadFile();
+        }
     }
 
     public int getWidth() {
@@ -71,6 +85,10 @@ public class ImageHolder {
 
     public int getRGB(int x, int y) {
         return buffer.getRGB(x, y);
+    }
+
+    public void setRGB(int x, int y, int rgb) {
+        buffer.setRGB(x, y, rgb);
     }
 
     public Dimension getDimension() {
@@ -87,7 +105,7 @@ public class ImageHolder {
         int imgSize = img.getWidth() * img.getHeight();
         for (int i = 0; i <= widthDiference * heigthDiference; i++) {
             int X = 0, Y = 0;
-            if(widthDiference!=0) {
+            if (widthDiference != 0) {
                 X = i % widthDiference;
                 Y = i / widthDiference;
             }
@@ -111,7 +129,7 @@ public class ImageHolder {
 
     public void saveImage(String name) throws IOException, FileAlreadyExists {
         File outputfile = new File(name);
-        if( outputfile.isFile() ) {
+        if (outputfile.isFile()) {
             throw new FileAlreadyExists();
         }
         ImageIO.write(buffer, "png", outputfile);
@@ -119,5 +137,27 @@ public class ImageHolder {
 
     public void getSubImage(Rectangle rectangle) {
         buffer = buffer.getSubimage(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    }
+
+    public ImageHolder difference(ImageHolder img) {
+        ImageHolder result = new ImageHolder(buffer.getWidth(), buffer.getHeight());
+
+        int imgSize = buffer.getWidth() * buffer.getHeight();
+        for (int j = 0; j < imgSize; j++) {
+            int x = j % buffer.getWidth();
+            int y = j / buffer.getWidth();
+
+            try {
+                int rgbDiff = buffer.getRGB(x, y) - img.getRGB(x, y);
+                if (rgbDiff == 0)
+                    result.setRGB(x, y, 0);
+                else
+                    result.setRGB(x, y, buffer.getRGB(x, y));
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                result.setRGB(x, y, buffer.getRGB(x, y));
+            }
+        }
+        return result;
     }
 }

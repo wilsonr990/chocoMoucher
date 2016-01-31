@@ -30,8 +30,8 @@ public class Main {
             ChocoMouche gameInterface;
             gameInterface = new ChocoMouche();
 
-            Chocomoucher gamer;
-            gamer = new Chocomoucher( gameInterface );
+            ChocomouchePlayer gamer;
+            gamer = new ChocomouchePlayer( gameInterface );
 
             gamer.play();
         } catch (NoOpenGame ex) {
