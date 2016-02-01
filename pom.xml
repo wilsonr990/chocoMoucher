@@ -12,6 +12,7 @@
     <modules>
         <module>commons</module>
         <module>recorder</module>
+        <module>analyzer</module>
         <module>games</module>
         <module>players</module>
     </modules>
