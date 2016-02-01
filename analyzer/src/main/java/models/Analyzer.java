@@ -43,60 +43,94 @@ public class Analyzer {
 
         File[] files = file.listFiles();
         for (File f : files) {
+            if(!f.getName().equals("aa-start"))continue;
             System.out.println("will analyze " + f.getName());
 
             final File[] imageFiles = f.listFiles();
-            Arrays.sort(imageFiles, new Comparator() {
-                public int compare(Object f1, Object f2) {
-                    String name1 = ((File) f1).getName();
-                    Integer let1 = (int) name1.charAt(0);
-                    Integer val1 = Integer.valueOf(((String) name1).substring(1, name1.lastIndexOf('.')));
-                    String name2 = ((File) f2).getName();
-                    Integer let2 = (int) name2.charAt(0);
-                    Integer val2 = Integer.valueOf(((String) name2).substring(1, name2.lastIndexOf('.')));
-
-                    if(let1.equals(let2)){
-                        return val1.compareTo(val2);
-                    }
-                    else
-                        return  let1.compareTo(let2);
-                }
-            });
+//            Arrays.sort(imageFiles, new Comparator() {
+//                public int compare(Object f1, Object f2) {
+//                    String name1 = ((File) f1).getName();
+//                    Integer let1 = (int) name1.charAt(0);
+//                    Integer val1 = Integer.valueOf(((String) name1).substring(1, name1.lastIndexOf('.')));
+//                    String name2 = ((File) f2).getName();
+//                    Integer let2 = (int) name2.charAt(0);
+//                    Integer val2 = Integer.valueOf(((String) name2).substring(1, name2.lastIndexOf('.')));
+//
+//                    if(let1.equals(let2)){
+//                        return val1.compareTo(val2);
+//                    }
+//                    else
+//                        return  let1.compareTo(let2);
+//                }
+//            });
             final File finalFile = new File("Analyzed\\" + f.getName() + "\\");
             if (!finalFile.exists()) {
                 finalFile.mkdir();
             }
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        int i = 0;
-                        ImageHolder previous = new ImageHolder();
-                        for (File image : imageFiles) {
-                            System.out.println("img " + image.getName());
-                            if (interrupted()) return;
-
-                            ImageHolder current = new ImageHolder(image);
-
-                            ImageHolder difference = current.difference(previous);
-                            difference.saveImage(finalFile.getAbsolutePath() + "\\" + i++ + ".png");
-
-                            previous = current;
-                        }
-                        threads.remove(this);
-                    } catch (FileAlreadyExists fileAlreadyExists) {
-                        showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
-                    } catch (IOException e) {
-                        showMessageDialog(null, "Cant manage files!");
-                    } catch (CantReadFile cantReadFile) {
-                        showMessageDialog(null, "Cant read file!");
-                    }
-                }
-            };
-            thread.start();
-            threads.add(thread);
+            //Differences(imageFiles, finalFile);
+            Similarities(imageFiles, finalFile);
         }
 
+    }
+
+    private void Differences(final File[] imageFiles, final File finalFile) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int i = 0;
+                    ImageHolder previous = null;
+                    for (File image : imageFiles) {
+                        System.out.println("img " + image.getName());
+                        if (interrupted()) return;
+
+                        ImageHolder current = new ImageHolder(image);
+
+                        ImageHolder difference = current.difference(previous);
+                        difference.saveImage(finalFile.getAbsolutePath() + "\\" + i++ + ".png");
+
+                        previous = current;
+                    }
+                    threads.remove(this);
+                } catch (FileAlreadyExists fileAlreadyExists) {
+                    showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
+                } catch (IOException e) {
+                    showMessageDialog(null, "Cant manage files!");
+                } catch (CantReadFile cantReadFile) {
+                    showMessageDialog(null, "Cant read file!");
+                }
+            }
+        };
+        thread.start();
+        threads.add(thread);
+    }
+
+    private void Similarities(final File[] imageFiles, final File finalFile) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int i = 0;
+                    ImageHolder similarity = null;
+                    for (File image : imageFiles) {
+                        if (interrupted()) return;
+
+                        ImageHolder current = new ImageHolder(image);
+                        similarity = current.similarity(similarity);
+                    }
+                    similarity.saveImage(finalFile.getAbsolutePath() + "\\" + i++ + ".png");
+                    threads.remove(this);
+                } catch (FileAlreadyExists fileAlreadyExists) {
+                    showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
+                } catch (IOException e) {
+                    showMessageDialog(null, "Cant manage files!");
+                } catch (CantReadFile cantReadFile) {
+                    showMessageDialog(null, "Cant read file!");
+                }
+            }
+        };
+        thread.start();
+        threads.add(thread);
     }
 
     public String getDataPath() {
