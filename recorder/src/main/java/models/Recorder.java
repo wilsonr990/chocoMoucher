@@ -59,11 +59,11 @@ public class Recorder {
                 try {
                     int i = 0;
                     ImageHolder oldImage = new ImageHolder();
+                    gameHandler.reset();
                     while (!isInterrupted()) {
                         ImageHolder image = new ImageHolder((Rectangle) null);
                         gameHandler.feed(image);
-                        if( !gameHandler.gameDetected() ) {
-                            showMessageDialog(null, "No game detected!");
+                        if( !gameHandler.gameDetected() || gameHandler.gameEnded() ) {
                             break;
                         }
 
@@ -73,11 +73,10 @@ public class Recorder {
                         }
                         oldImage = image;
                     }
-                    showMessageDialog(null, "Recording Ended");
                 } catch (IOException e) {
                     showMessageDialog(null, "Cant manage files!");
                 } catch (CantCaptureScreen cantCaptureScreen) {
-                    showMessageDialog(null, "Cannt capture screen!");
+                    showMessageDialog(null, "Cant capture screen!");
                 } catch (FileAlreadyExists fileAlreadyExists) {
                     showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
                 }
@@ -97,5 +96,9 @@ public class Recorder {
 
     public String getDataPath() {
         return dataPath;
+    }
+
+    public String getGameStatus() {
+        return gameHandler.getGameStatus();
     }
 }

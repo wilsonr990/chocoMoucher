@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gamerecorder</artifactId>
+    <artifactId>recorder</artifactId>
     <dependencies>
         <dependency>
             <groupId>chocoMoucher</groupId>
@@ -18,7 +18,7 @@
         </dependency>
         <dependency>
             <groupId>chocoMoucher</groupId>
-            <artifactId>gamer</artifactId>
+            <artifactId>games</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.TimerTask;
 
 import static controllers.RecorderController.Actions.StartRec;
 import static controllers.RecorderController.Actions.StopRec;
@@ -14,8 +15,9 @@ public class RecorderView extends JFrame {
     private JButton startRecButton;
     private JButton stopRecButton;
     private JPanel mainPanel;
-    private JTextField gameLabel;
+    private JTextField gameField;
     private JLabel pathLabel;
+    private JLabel statusLabel;
 
     public RecorderView() {
         setTitle("Game Recorder");
@@ -42,19 +44,27 @@ public class RecorderView extends JFrame {
     public void setController(RecorderController controller) {
         startRecButton.addActionListener(controller);
         stopRecButton.addActionListener(controller);
-        gameLabel.addKeyListener(controller);
+        gameField.addKeyListener(controller);
     }
 
-    public String getGameLabel() {
-        return gameLabel.getText();
+    public String getGameField() {
+        return gameField.getText();
     }
 
-    public void setGameLabel(String path) {
-        gameLabel.setText( path );
+    public void setGameField(String path) {
+        gameField.setText(path);
     }
 
     public void setPathLabel(String pathLabel) {
-        this.pathLabel.setText( pathLabel );
+        this.pathLabel.setText(pathLabel);
+    }
+
+    public JLabel getStatusLabel() {
+        return statusLabel;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel.setText(statusLabel);
     }
 }
 

@@ -140,6 +140,7 @@ public class ImageHolder {
     }
 
     public ImageHolder difference(ImageHolder img) {
+        if(img == null) return this;
         ImageHolder result = new ImageHolder(buffer.getWidth(), buffer.getHeight());
 
         int imgSize = buffer.getWidth() * buffer.getHeight();
@@ -147,16 +148,28 @@ public class ImageHolder {
             int x = j % buffer.getWidth();
             int y = j / buffer.getWidth();
 
-            try {
-                int rgbDiff = buffer.getRGB(x, y) - img.getRGB(x, y);
-                if (rgbDiff == 0)
-                    result.setRGB(x, y, 0);
-                else
-                    result.setRGB(x, y, buffer.getRGB(x, y));
-            }
-            catch (ArrayIndexOutOfBoundsException e){
+            int rgbDiff = buffer.getRGB(x, y) - img.getRGB(x, y);
+            if (rgbDiff == 0)
+                result.setRGB(x, y, 0);
+            else
                 result.setRGB(x, y, buffer.getRGB(x, y));
-            }
+        }
+        return result;
+    }
+
+    public ImageHolder similarity(ImageHolder img) {
+        if(img == null) return this;
+        ImageHolder result = new ImageHolder(buffer.getWidth(), buffer.getHeight());
+
+        int imgSize = buffer.getWidth() * buffer.getHeight();
+        for (int j = 0; j < imgSize; j++) {
+            int x = j % buffer.getWidth();
+            int y = j / buffer.getWidth();
+
+            if (buffer.getRGB(x, y) == img.getRGB(x, y))
+                result.setRGB(x, y, buffer.getRGB(x, y));
+            else
+                result.setRGB(x, y, 0);
         }
         return result;
     }
