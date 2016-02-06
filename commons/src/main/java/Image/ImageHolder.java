@@ -19,6 +19,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
@@ -57,8 +58,8 @@ public class ImageHolder {
         }
     }
 
-    public ImageHolder() {
-        buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    public ImageHolder(BufferedImage buffer) {
+        this.buffer = buffer;
     }
 
     public ImageHolder(int w, int h) {
@@ -140,7 +141,7 @@ public class ImageHolder {
     }
 
     public ImageHolder difference(ImageHolder img) {
-        if(img == null) return this;
+        if (img == null) return this;
         ImageHolder result = new ImageHolder(buffer.getWidth(), buffer.getHeight());
 
         int imgSize = buffer.getWidth() * buffer.getHeight();
@@ -157,8 +158,8 @@ public class ImageHolder {
         return result;
     }
 
-    public ImageHolder similarity(ImageHolder img) {
-        if(img == null) return this;
+    public ImageHolder Similarity(ImageHolder img) {
+        if (img == null) return this;
         ImageHolder result = new ImageHolder(buffer.getWidth(), buffer.getHeight());
 
         int imgSize = buffer.getWidth() * buffer.getHeight();
@@ -170,6 +171,36 @@ public class ImageHolder {
                 result.setRGB(x, y, buffer.getRGB(x, y));
             else
                 result.setRGB(x, y, 0);
+        }
+        return result;
+    }
+
+    public ArrayList<ImageHolder> getMaskedImages(ImageHolder mask) {
+        ArrayList<ImageHolder> result = new ArrayList<ImageHolder>();
+        if (mask == null) return result;
+
+        int imgSize = mask.getWidth() * mask.getHeight();
+        for (int j = 0; j < imgSize; j++) {
+            int x = j % mask.getWidth();
+            int y = j / mask.getWidth();
+
+            if (mask.getRGB(x, y) == Color.WHITE.getRGB()) {
+                if (mask.getRGB(x + 1, y) == Color.BLACK.getRGB() && mask.getRGB(x, y + 1) == Color.BLACK.getRGB()) {
+                    int w = 1, h = 1;
+                    while (true) {
+                        if (mask.getRGB(x - w - 1, y - h - 1) == Color.WHITE.getRGB()) {
+                            w++;
+                            h++;
+                        } else if (mask.getRGB(x - w - 1, y - h) == Color.WHITE.getRGB())
+                            w++;
+                        else if (mask.getRGB(x - w, y - h - 1) == Color.WHITE.getRGB())
+                            h++;
+                        else
+                            break;
+                    }
+                    result.add(new ImageHolder(buffer.getSubimage(x - w, y - h, w, h)));
+                }
+            }
         }
         return result;
     }
