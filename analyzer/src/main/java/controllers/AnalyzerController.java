@@ -1,5 +1,6 @@
 package controllers;
 
+import Exceptions.CantReadFile;
 import models.Analyzer;
 import views.AnalyzerView;
 
@@ -24,7 +25,11 @@ public class AnalyzerController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals(Actions.StartAnalysis.name())) {
-            analyzer.startAnalysis();
+            try {
+                analyzer.startAnalysis();
+            } catch (CantReadFile ignored) {
+                System.out.println("cant analyze");
+            }
         } else if (command.equals(Actions.StopAnalysis.name())) {
             analyzer.stopAnalysis();
         }
