@@ -17,12 +17,11 @@ public class RecorderView extends JFrame {
     private JPanel mainPanel;
     private JTextField gameField;
     private JLabel pathLabel;
-    private JLabel statusLabel;
+    private JTextArea statusLabel;
 
     public RecorderView() {
         setTitle("Game Recorder");
         setSize(400, 400);
-        setLayout(new GridLayout(3, 1));
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
@@ -59,7 +58,7 @@ public class RecorderView extends JFrame {
         this.pathLabel.setText(pathLabel);
     }
 
-    public JLabel getStatusLabel() {
+    public JTextArea getStatusLabel() {
         return statusLabel;
     }
 

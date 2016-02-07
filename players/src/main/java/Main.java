@@ -1,5 +1,6 @@
 import Exceptions.CantCaptureScreen;
 import Exceptions.NoOpenGame;
+import models.impl.ChocoMouche;
 
 import java.io.IOException;
 

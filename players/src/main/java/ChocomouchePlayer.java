@@ -8,6 +8,7 @@ import Exceptions.GameHasEnded;
 import Exceptions.GameIsLocked;
 import Exceptions.NoOpenGame;
 import models.ChocomoucherAnalizer;
+import models.impl.ChocoMouche;
 
 import java.awt.Point;
 import java.util.List;
@@ -74,7 +75,7 @@ class ChocomouchePlayer {
                 
                 System.out.println("moving..." + move.x+" "+move.y);
                 
-                game.clickOn( move );
+                //game.clickOn( move );
                 
                 if ( chocomoucherAnalizer.hasEnded() ){
                     continue;
@@ -82,11 +83,7 @@ class ChocomouchePlayer {
                 
                 updateLastMove(move);
                 System.out.println("sdasdasd");
-            } catch ( NoOpenGame ex ) {
-                System.out.println("Game seems to be locked" );
-            } catch (GameIsLocked ex) {
-                System.out.println("Game seems to be Locked" );
-            } catch (GameHasEnded ex) {
+            }  catch (GameHasEnded ex) {
                 System.out.println("Game has ended" );
             }
         }

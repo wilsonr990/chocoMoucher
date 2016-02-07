@@ -1,6 +1,7 @@
 package models;
 
 import Exceptions.CantCaptureScreen;
+import Exceptions.CantReadFile;
 import Exceptions.FileAlreadyExists;
 import Image.ImageHolder;
 
@@ -58,16 +59,17 @@ public class Recorder {
             public void run() {
                 try {
                     int i = 0;
-                    ImageHolder oldImage = new ImageHolder();
+                    ImageHolder oldImage = new ImageHolder(1, 1);
                     gameHandler.reset();
                     while (!isInterrupted()) {
                         ImageHolder image = new ImageHolder((Rectangle) null);
+                        if (gameHandler.gameDetected())
+                            image.getSubImage(new Rectangle(gameHandler.getLocation(), gameHandler.getDimension()));
                         gameHandler.feed(image);
-                        if( !gameHandler.gameDetected() || gameHandler.gameEnded() ) {
+                        if (!gameHandler.gameDetected() || gameHandler.gameEnded()) {
                             break;
                         }
 
-                        image.getSubImage( new Rectangle(gameHandler.getLocation(), gameHandler.getDimension()) );
                         if (oldImage.findSubImage(image) == null) {
                             image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
                         }
@@ -79,6 +81,8 @@ public class Recorder {
                     showMessageDialog(null, "Cant capture screen!");
                 } catch (FileAlreadyExists fileAlreadyExists) {
                     showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
+                } catch (CantReadFile cantReadFile) {
+                    showMessageDialog(null, "Cant manage files!");
                 }
             }
         };
