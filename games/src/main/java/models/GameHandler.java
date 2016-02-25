@@ -2,14 +2,16 @@ package models;
 
 import Exceptions.CantReadFile;
 import Image.ImageHolder;
+import models.impl.ChocoMouche;
 
 import java.awt.*;
+import java.util.Map;
 
 /**
  * Created by wilsonr on 1/31/2016.
  */
 public abstract class GameHandler {
-    private enum Status {
+    public enum Status {
         DetectingGame, WaitingToStart, PlayingGame, GameEnded, UnknownState;
     }
 
@@ -22,6 +24,10 @@ public abstract class GameHandler {
 
     public GameHandler() {
         gameState = Status.DetectingGame;
+    }
+
+    public Status getStatus() {
+        return gameState;
     }
 
     protected boolean detectSubImage(ImageHolder image, String name) {
@@ -108,4 +114,6 @@ public abstract class GameHandler {
     protected abstract void ResetGameVariables();
 
     protected abstract void UpdateGameVariables(ImageHolder image) throws CantReadFile;
+
+    public abstract Map<ChocoMouche.Property, Object> getGameProperties();
 }

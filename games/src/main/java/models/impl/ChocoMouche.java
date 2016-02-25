@@ -1,22 +1,23 @@
 package models.impl;
 
-import Exceptions.*;
+import Exceptions.CantReadFile;
 import Image.ImageHolder;
 import models.GameHandler;
 
 import java.awt.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 
 /**
  * @author wilsonr
  */
 
 public class ChocoMouche extends GameHandler {
+    public enum Property {
+        Map, Lives, TurnPercentage
+    }
+
     private int lives;
     private int turnPercentage;
     private HashMap<String, ImageHolder> images;
@@ -73,8 +74,14 @@ public class ChocoMouche extends GameHandler {
         System.out.println(printedMap);
     }
 
-    public int[][] getMap() {
-        return map;
+    @Override
+    public Map<Property, Object> getGameProperties() {
+        HashMap<Property, Object> properties = new HashMap<Property, Object>();
+        properties.put(Property.Map, map);
+        properties.put(Property.Lives, lives);
+        properties.put(Property.TurnPercentage, turnPercentage);
+
+        return properties;
     }
 
     private void readImages() {
@@ -142,5 +149,17 @@ public class ChocoMouche extends GameHandler {
 
     private int getLivesValue(ImageHolder l1, ImageHolder l2, ImageHolder l3) {
         return getImageValue(l1) + getImageValue(l2) + getImageValue(l3);
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public int getTurnPercentage() {
+        return turnPercentage;
+    }
+
+    public int[][] getMap() {
+        return map;
     }
 }
