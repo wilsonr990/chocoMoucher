@@ -6,7 +6,7 @@ package Image;
  */
 
 import Exceptions.CantCaptureScreen;
-import Exceptions.CantReadFile;
+import Exceptions.ErrorInImageResources;
 import Exceptions.FileAlreadyExists;
 
 import java.awt.AWTException;
@@ -43,18 +43,18 @@ public class ImageHolder {
         }
     }
 
-    public ImageHolder(String url) throws CantReadFile {
+    public ImageHolder(String url) throws ErrorInImageResources {
         try {
             URL resource = getClass().getClassLoader().getResource(url);
             if (resource != null) {
                 buffer = ImageIO.read(new FileInputStream(new File(resource.getFile())));
             } else {
-                throw new CantReadFile();
+                throw new ErrorInImageResources();
             }
         } catch (FileNotFoundException e) {
-            throw new CantReadFile();
+            throw new ErrorInImageResources();
         } catch (IOException e) {
-            throw new CantReadFile();
+            throw new ErrorInImageResources();
         }
     }
 
@@ -66,13 +66,13 @@ public class ImageHolder {
         buffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
     }
 
-    public ImageHolder(File file) throws CantReadFile {
+    public ImageHolder(File file) throws ErrorInImageResources {
         try {
             buffer = ImageIO.read(new FileInputStream(file));
         } catch (FileNotFoundException e) {
-            throw new CantReadFile();
+            throw new ErrorInImageResources();
         } catch (IOException e) {
-            throw new CantReadFile();
+            throw new ErrorInImageResources();
         }
     }
 

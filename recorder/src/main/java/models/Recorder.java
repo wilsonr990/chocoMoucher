@@ -1,7 +1,7 @@
 package models;
 
 import Exceptions.CantCaptureScreen;
-import Exceptions.CantReadFile;
+import Exceptions.ErrorInImageResources;
 import Exceptions.FileAlreadyExists;
 import Image.ImageHolder;
 
@@ -18,9 +18,9 @@ public class Recorder {
     private Thread thread;
     private String dataPath = "data";
     private boolean gameNameSet = false;
-    private GameHandler gameHandler;
+    private BasicGameHandler gameHandler;
 
-    public Recorder(GameHandler gameHandler) {
+    public Recorder(BasicGameHandler gameHandler) {
         this.gameHandler = gameHandler;
     }
 
@@ -81,7 +81,7 @@ public class Recorder {
                     showMessageDialog(null, "Cant capture screen!");
                 } catch (FileAlreadyExists fileAlreadyExists) {
                     showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
-                } catch (CantReadFile cantReadFile) {
+                } catch (ErrorInImageResources errorInImageResources) {
                     showMessageDialog(null, "Cant manage files!");
                 }
             }

@@ -1,6 +1,6 @@
 package models;
 
-import Exceptions.CantReadFile;
+import Exceptions.ErrorInImageResources;
 import Exceptions.FileAlreadyExists;
 import Image.ImageHolder;
 
@@ -19,7 +19,7 @@ public class Analyzer {
     private ArrayList<Thread> threads = new ArrayList<Thread>();
     private String dataPath = "analyzed";
 
-    public void startAnalysis() throws CantReadFile {
+    public void startAnalysis() throws ErrorInImageResources {
         System.out.println("Start");
         if (threads.isEmpty()) {
             initializeThread();
@@ -34,7 +34,7 @@ public class Analyzer {
         threads.clear();
     }
 
-    private void initializeThread() throws CantReadFile {
+    private void initializeThread() throws ErrorInImageResources {
         File file = new File("data");
         if (!file.exists()) {
             showMessageDialog(null, "No Data File Found");
@@ -96,7 +96,7 @@ public class Analyzer {
                     showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
                 } catch (IOException e) {
                     showMessageDialog(null, "Cant manage files!");
-                } catch (CantReadFile cantReadFile) {
+                } catch (ErrorInImageResources cantReadFile) {
                     showMessageDialog(null, "Cant read file!");
                 }
             }
@@ -124,7 +124,7 @@ public class Analyzer {
                     showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
                 } catch (IOException e) {
                     showMessageDialog(null, "Cant manage files!");
-                } catch (CantReadFile cantReadFile) {
+                } catch (ErrorInImageResources cantReadFile) {
                     showMessageDialog(null, "Cant read file!");
                 }
             }
@@ -133,7 +133,7 @@ public class Analyzer {
         threads.add(thread);
     }
 
-    private void ApplyMask(final File[] imageFiles, final File finalFile) throws CantReadFile {
+    private void ApplyMask(final File[] imageFiles, final File finalFile) throws ErrorInImageResources {
         final ImageHolder mask = new ImageHolder("mask.png");
         Thread thread = new Thread() {
             @Override
@@ -166,7 +166,7 @@ public class Analyzer {
                     showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
                 } catch (IOException e) {
                     showMessageDialog(null, "Cant manage files!");
-                } catch (CantReadFile cantReadFile) {
+                } catch (ErrorInImageResources cantReadFile) {
                     showMessageDialog(null, "Cant read file!");
                 }
             }

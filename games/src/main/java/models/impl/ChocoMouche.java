@@ -1,8 +1,8 @@
 package models.impl;
 
-import Exceptions.CantReadFile;
+import Exceptions.ErrorInImageResources;
 import Image.ImageHolder;
-import models.GameHandler;
+import models.BasicGameHandler;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,23 +13,24 @@ import java.util.Map;
  * @author wilsonr
  */
 
-public class ChocoMouche extends GameHandler {
+public class ChocoMouche extends BasicGameHandler {
+
     public enum Property {
-        Map, Lives, TurnPercentage
+        Map, Lives, TurnPercentage;
     }
 
+    private final String printedMap;
     private int lives;
     private int turnPercentage;
     private HashMap<String, ImageHolder> images;
     private int[][] map;
 
     public ChocoMouche() {
-        ResetGameVariables();
+        resetGameVariables();
         printedMap = "CHOCOMOUCHE";
     }
 
-    @Override
-    protected void ResetGameVariables() {
+    public void resetGameVariables() {
         map = new int[8][9];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 9; j++) {
@@ -42,8 +43,7 @@ public class ChocoMouche extends GameHandler {
         readImages();
     }
 
-    @Override
-    protected void UpdateGameVariables(ImageHolder image) throws CantReadFile {
+    public void updateGameVariables(ImageHolder image) throws ErrorInImageResources {
         ArrayList<ImageHolder> masked = image.getMaskedImages(new ImageHolder("mask.png"));
 
         lives = getLivesValue(masked.remove(74), masked.remove(65), masked.remove(56));
@@ -52,29 +52,11 @@ public class ChocoMouche extends GameHandler {
             int x = i % 8;
             int y = i / 8;
             int imageValue = getImageValue(masked.get(i));
-            if (map[x][y] == -1)
-                if (imageValue == 0)
-                    map[x][y] = 0;
-                else
-                    map[x][y] = imageValue;
-            if (map[x][y] == 0)
+            if (map[x][y] == -1 || map[x][y] == 0)
                 map[x][y] = imageValue;
         }
-        printedMap = "lives: " + lives + "\n";
-        printedMap += "turnPercentage: " + turnPercentage + "\n";
-        for (int i = 0; i < 72; i++) {
-            int x = i % 8;
-            int y = i / 8;
-            if (x == 0)
-                printedMap += "\n";
-            if (x >= 0)
-                printedMap += " ";
-            printedMap += map[x][y];
-        }
-        System.out.println(printedMap);
     }
 
-    @Override
     public Map<Property, Object> getGameProperties() {
         HashMap<Property, Object> properties = new HashMap<Property, Object>();
         properties.put(Property.Map, map);
@@ -101,7 +83,7 @@ public class ChocoMouche extends GameHandler {
             images.put("6", new Image.Image( "images/6.png" ) );
             images.put("7", new Image.Image( "images/7.png" ) );
             images.put("8", new Image.Image( "images/8.png" ) );*/
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             System.err.println("Can´t Load Images");
         }
     }
@@ -151,15 +133,4 @@ public class ChocoMouche extends GameHandler {
         return getImageValue(l1) + getImageValue(l2) + getImageValue(l3);
     }
 
-    public int getLives() {
-        return lives;
-    }
-
-    public int getTurnPercentage() {
-        return turnPercentage;
-    }
-
-    public int[][] getMap() {
-        return map;
-    }
 }

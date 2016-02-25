@@ -1,13 +1,11 @@
 package models;
 
 import Exceptions.CantCaptureScreen;
-import Exceptions.CantReadFile;
-import Exceptions.FileAlreadyExists;
+import Exceptions.ErrorInImageResources;
 import Exceptions.GameHasEnded;
 import Image.ImageHolder;
 
 import java.awt.*;
-import java.io.IOException;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -15,11 +13,11 @@ import static javax.swing.JOptionPane.showMessageDialog;
  * Created by wilsonr on 2/7/2016.
  */
 public abstract class Player {
-    protected final GameHandler gameHandler;
+    protected final BasicGameHandler gameHandler;
     private final GameInterface gameInterface;
     private Thread thread;
 
-    public Player(GameHandler gameHandler, GameInterface gameInterface) {
+    public Player(BasicGameHandler gameHandler, GameInterface gameInterface) {
         this.gameHandler = gameHandler;
         this.gameInterface = gameInterface;
     }
@@ -54,7 +52,7 @@ public abstract class Player {
                     showMessageDialog(null, "Cant take screenshot!");
                 } catch (GameHasEnded gameHasEnded) {
                     showMessageDialog(null, "ended game???!");
-                } catch (CantReadFile cantReadFile) {
+                } catch (ErrorInImageResources errorInImageResources) {
                     showMessageDialog(null, "filee???!");
                 }
             }

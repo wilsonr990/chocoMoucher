@@ -5,7 +5,7 @@ package Image;/*
  */
 
 import Exceptions.CantCaptureScreen;
-import Exceptions.CantReadFile;
+import Exceptions.ErrorInImageResources;
 import Exceptions.FileAlreadyExists;
 import org.junit.*;
 
@@ -28,7 +28,7 @@ public class ImageHolderTest {
             int expResult = 2;
             int result = instance.getWidth();
             assertEquals(expResult, result);
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             fail("Image should be loaded");
         }
     }
@@ -40,7 +40,7 @@ public class ImageHolderTest {
             int expResult = 2;
             int result = instance.getHeight();
             assertEquals(expResult, result);
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             fail("Image should be loaded");
         }
     }
@@ -57,7 +57,7 @@ public class ImageHolderTest {
             assertEquals( Color.BLACK.getRGB(), result);
             result = instance.getRGB(0, 1);
             assertEquals( Color.BLACK.getRGB(), result);
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             fail("Image should be loaded");
         }
     }
@@ -70,7 +70,7 @@ public class ImageHolderTest {
             Dimension expResult = new Dimension(2, 2);
             Dimension result = instance.getDimension();
             assertEquals(expResult, result);
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             fail("Image should be loaded");
         }
     }
@@ -83,7 +83,7 @@ public class ImageHolderTest {
             Point expResult = new Point(5,5);
             Point result = instance.findSubImage(img);
             assertEquals(expResult, result);
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             fail("Image should be loaded");
         }
     }
@@ -96,7 +96,7 @@ public class ImageHolderTest {
             Point expResult = new Point(0,0);
             Point result = instance.findSubImage(img);
             assertEquals(expResult, result);
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             fail("Image should be loaded");
         }
     }
@@ -108,7 +108,7 @@ public class ImageHolderTest {
             ImageHolder instance = new ImageHolder("testSubImage.png");
             Point result = instance.findSubImage(img);
             assertEquals(null, result);
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             fail("Image should be loaded");
         }
     }
@@ -118,7 +118,7 @@ public class ImageHolderTest {
         try {
             ImageHolder img = new ImageHolder("nonExistantpng");
             fail("should not be loaded");
-        } catch (CantReadFile ex) {
+        } catch (ErrorInImageResources ex) {
             assertTrue("Image doesntExists", true);
         }
     }

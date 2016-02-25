@@ -5,8 +5,6 @@ package models;/*
  */
 
 import Exceptions.GameHasEnded;
-import models.GameInterface;
-import models.Player;
 import models.impl.ChocoMouche;
 
 import java.awt.Point;
@@ -15,8 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static models.GameHandler.Status.PlayingGame;
-import static models.GameHandler.Status.WaitingToStart;
+import static models.BasicGameHandler.Status.PlayingGame;
+import static models.BasicGameHandler.Status.WaitingToStart;
 import static models.impl.ChocoMouche.Property.Lives;
 import static models.impl.ChocoMouche.Property.TurnPercentage;
 

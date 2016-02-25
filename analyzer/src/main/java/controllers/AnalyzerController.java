@@ -1,6 +1,6 @@
 package controllers;
 
-import Exceptions.CantReadFile;
+import Exceptions.ErrorInImageResources;
 import models.Analyzer;
 import views.AnalyzerView;
 
@@ -27,7 +27,7 @@ public class AnalyzerController implements ActionListener {
         if (command.equals(Actions.StartAnalysis.name())) {
             try {
                 analyzer.startAnalysis();
-            } catch (CantReadFile ignored) {
+            } catch (ErrorInImageResources ignored) {
                 System.out.println("cant analyze");
             }
         } else if (command.equals(Actions.StopAnalysis.name())) {
