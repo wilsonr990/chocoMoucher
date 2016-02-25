@@ -4,13 +4,15 @@
  * and open the template in the editor.
  */
 
-import java.awt.Point;
-
 import Exceptions.GameHasEnded;
+import models.GameInterface;
+import models.impl.ChocoMouche;
 import models.ChocomoucherAnalizer;
 import org.junit.*;
 
-import static org.junit.Assert.*;
+import java.awt.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -49,7 +51,7 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(0,0), a.bestMove().get(0));
@@ -80,7 +82,7 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
             a.update(new Point(0,0), map);
             double[][] p = a.findProbabilities();
 
@@ -112,10 +114,10 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map );
+                    a.update( new Point(i,j), map);
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(0,1), a.bestMove().get(0));
@@ -146,10 +148,10 @@ public class AnalizerTest {
                 {  0,  1,  0,0.5,0.5,0.5,  0,  0,  0},
                 {  0,  0,  1,0.5,0.5,0.5,  0,  0,  1}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map );
+                    a.update( new Point(i,j), map);
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(1,0), a.bestMove().get(0));
@@ -180,10 +182,10 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.2,0.2,0.2,0.5,0.5},
                 {0.5,0.5,0.5,0.5,  1,  0,0.2,0.5,0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map );
+                    a.update( new Point(i,j), map);
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(2,7), a.bestMove().get(0));
@@ -214,10 +216,10 @@ public class AnalizerTest {
                 {0.3,0.3,0.5,0.5,  1,0.5,0.5,  0,  1},
                 {  0,0.3,0.5,0.5,  1,  0,  0,  0,  0}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
             for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
                 if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map );
+                    a.update( new Point(i,j), map);
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(6,7), a.bestMove().get(0));
@@ -248,10 +250,10 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.2,0.2,  0,  0},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.8,  0,  0}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
-            a.update( new Point(0,0), map );
-            a.update( new Point(7,8), map );
-            a.update( new Point(5,6), map );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
+            a.update( new Point(0,0), map);
+            a.update( new Point(7,8), map);
+            a.update( new Point(5,6), map);
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(0,4), a.bestMove().get(0));
@@ -284,9 +286,42 @@ public class AnalizerTest {
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
                 {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer( );
-            a.update( new Point(0,0), map );
-            a.update( new Point(2,2), map );
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
+            a.update( new Point(0,0), map);
+            a.update( new Point(2,2), map);
+            double[][] p = a.findProbabilities();
+
+            assertEquals( new Point(1,2), a.bestMove().get(0));
+            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
+                Assert.assertEquals( result[i][j], p[i][j], 0.04);
+        } catch (GameHasEnded ex) {
+            Assert.fail( "Game Must not have ended" );
+        }
+    }
+
+    @Test
+    public void testExpantion2() {
+        try {
+            int[][] map ={{ 0, 2,-1,-1,-1,-1,1,0,0},
+                    { 1, 3,-1,-1,-1,-1,-1,-1,-1},
+                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
+                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
+                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
+                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
+                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
+                    {-1,-1,-1,-1,-1,-1,-1,-1,-1}};
+            double[][] result ={{  0,  0,0.8,0.5,0.5,0.5,0.5,0.5,0.5},
+                    {  0,  0,0.2,0.2,0.5,0.5,0.5,0.5,0.5},
+                    {  1,  1,  0,0.2,0.5,0.5,0.5,0.5,0.5},
+                    {0.5,0.2,0.2,0.2,0.5,0.5,0.5,0.5,0.5},
+                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
+                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
+                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
+                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
+
+            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
+            a.update( new Point(0,0), map);
+            //a.update( new Point(2,2), map);
             double[][] p = a.findProbabilities();
 
             assertEquals( new Point(1,2), a.bestMove().get(0));
