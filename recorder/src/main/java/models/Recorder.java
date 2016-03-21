@@ -18,10 +18,10 @@ public class Recorder {
     private Thread thread;
     private String dataPath = "data";
     private boolean gameNameSet = false;
-    private BasicGameHandler gameHandler;
+    private Game game;
 
-    public Recorder(BasicGameHandler gameHandler) {
-        this.gameHandler = gameHandler;
+    public Recorder(Game game) {
+        this.game = game;
     }
 
     public void startRecording() {
@@ -60,13 +60,13 @@ public class Recorder {
                 try {
                     int i = 0;
                     ImageHolder oldImage = new ImageHolder(1, 1);
-                    gameHandler.reset();
+                    game.reset();
                     while (!isInterrupted()) {
                         ImageHolder image = new ImageHolder((Rectangle) null);
-                        if (gameHandler.gameDetected())
-                            image.getSubImage(new Rectangle(gameHandler.getLocation(), gameHandler.getDimension()));
-                        gameHandler.feed(image);
-                        if (!gameHandler.gameDetected() || gameHandler.gameEnded()) {
+                        if (game.gameDetected())
+                            image.getSubImage(new Rectangle(game.getLocation(), game.getDimension()));
+                        game.feed(image);
+                        if (!game.gameDetected() || game.gameEnded()) {
                             break;
                         }
 
@@ -103,6 +103,6 @@ public class Recorder {
     }
 
     public String getGameStatus() {
-        return gameHandler.getGameStatus();
+        return game.getGameStatus();
     }
 }

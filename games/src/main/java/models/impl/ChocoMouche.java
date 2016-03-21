@@ -2,24 +2,19 @@ package models.impl;
 
 import Exceptions.ErrorInImageResources;
 import Image.ImageHolder;
-import models.BasicGameHandler;
+import models.BasicGame;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author wilsonr
- */
-
-public class ChocoMouche extends BasicGameHandler {
+public class ChocoMouche extends BasicGame {
 
     public enum Property {
         Map, Lives, TurnPercentage;
     }
 
-    private final String printedMap;
     private int lives;
     private int turnPercentage;
     private HashMap<String, ImageHolder> images;
@@ -27,7 +22,6 @@ public class ChocoMouche extends BasicGameHandler {
 
     public ChocoMouche() {
         resetGameVariables();
-        printedMap = "CHOCOMOUCHE";
     }
 
     public void resetGameVariables() {
@@ -44,7 +38,7 @@ public class ChocoMouche extends BasicGameHandler {
     }
 
     public void updateGameVariables(ImageHolder image) throws ErrorInImageResources {
-        ArrayList<ImageHolder> masked = image.getMaskedImages(new ImageHolder("mask.png"));
+        ArrayList<ImageHolder> masked = image.getMaskedImages(images.get("mask"));
 
         lives = getLivesValue(masked.remove(74), masked.remove(65), masked.remove(56));
         turnPercentage = getTurnPercentageValue(masked.remove(72));
@@ -57,8 +51,8 @@ public class ChocoMouche extends BasicGameHandler {
         }
     }
 
-    public Map<Property, Object> getGameProperties() {
-        HashMap<Property, Object> properties = new HashMap<Property, Object>();
+    public Map<Object, Object> getGameProperties() {
+        HashMap<Object, Object> properties = new HashMap<Object, Object>();
         properties.put(Property.Map, map);
         properties.put(Property.Lives, lives);
         properties.put(Property.TurnPercentage, turnPercentage);
@@ -68,17 +62,18 @@ public class ChocoMouche extends BasicGameHandler {
 
     private void readImages() {
         try {
-            images.put("f1", new ImageHolder("chocomouche/f1.png"));
-            images.put("f2", new ImageHolder("chocomouche/f2.png"));
-            images.put("f3", new ImageHolder("chocomouche/f3.png"));
-            images.put("f4", new ImageHolder("chocomouche/f4.png"));
-            images.put("a", new ImageHolder("chocomouche/a.png"));
-            images.put("c", new ImageHolder("chocomouche/c.png"));
-            images.put("l", new ImageHolder("chocomouche/l.png"));
-            images.put("1", new ImageHolder("chocomouche/1.png"));
-            images.put("2", new ImageHolder("chocomouche/2.png"));
-            images.put("3", new ImageHolder("chocomouche/3.png"));
-            images.put("4", new ImageHolder("chocomouche/4.png"));
+            images.put("mask", new ImageHolder("mask.png"));
+            images.put("f1", new ImageHolder("f1.png"));
+            images.put("f2", new ImageHolder("f2.png"));
+            images.put("f3", new ImageHolder("f3.png"));
+            images.put("f4", new ImageHolder("f4.png"));
+            images.put("a", new ImageHolder("a.png"));
+            images.put("c", new ImageHolder("c.png"));
+            images.put("l", new ImageHolder("l.png"));
+            images.put("1", new ImageHolder("1.png"));
+            images.put("2", new ImageHolder("2.png"));
+            images.put("3", new ImageHolder("3.png"));
+            images.put("4", new ImageHolder("4.png"));
             /*images.put("5", new Image.Image( "images/5.png" ) );
             images.put("6", new Image.Image( "images/6.png" ) );
             images.put("7", new Image.Image( "images/7.png" ) );
@@ -132,5 +127,4 @@ public class ChocoMouche extends BasicGameHandler {
     private int getLivesValue(ImageHolder l1, ImageHolder l2, ImageHolder l3) {
         return getImageValue(l1) + getImageValue(l2) + getImageValue(l3);
     }
-
 }

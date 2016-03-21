@@ -1,13 +1,6 @@
 package models;
 
-import Exceptions.GameIsLocked;
-import Exceptions.NoOpenGame;
-
 import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
 
 /**
  * Created by wilsonr on 2/1/2016.
@@ -27,7 +20,7 @@ public class GameInterface {
         System.out.println("MOVING!! " + p.x + ", " + p.y);
     }
 
-    public void clickOn(Point p) throws NoOpenGame, GameIsLocked {
+    public void clickOn(Point p) {
         /*try {
             if (gameDimension == null || mapLocation == null)
                 throw new NoOpenGame();

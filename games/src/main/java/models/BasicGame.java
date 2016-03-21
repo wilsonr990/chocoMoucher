@@ -8,9 +8,9 @@ import java.awt.*;
 /**
  * Created by wilsonr on 1/31/2016.
  */
-public abstract class BasicGameHandler implements GameHandler {
+public abstract class BasicGame implements Game {
     public enum Status {
-        DetectingGame, WaitingToStart, PlayingGame, GameEnded, UnknownState;
+        DetectingGame, WaitingToStart, PlayingGame, GameEnded, UnknownState
     }
 
     private static final int MAXIMUM_UNKNOWN_COUNTS = 5;
@@ -19,12 +19,8 @@ public abstract class BasicGameHandler implements GameHandler {
     protected Dimension gameDimension;
     private Status gameState;
 
-    public BasicGameHandler() {
+    public BasicGame() {
         gameState = Status.DetectingGame;
-    }
-
-    public Status getStatus() {
-        return gameState;
     }
 
     private boolean detectSubImage(ImageHolder image, String name) {
@@ -42,14 +38,14 @@ public abstract class BasicGameHandler implements GameHandler {
     }
 
     public void feed(ImageHolder image) throws ErrorInImageResources {
-        UpdateStatus(image);
+        updateStatus(image);
         if (gameState != Status.UnknownState)
             unknownCount = 0;
         if (gameState == Status.PlayingGame)
             updateGameVariables(image);
     }
 
-    private void UpdateStatus(ImageHolder image) {
+    private void updateStatus(ImageHolder image) {
         switch (gameState) {
             case DetectingGame:
                 if (detectSubImage(image, "base.png"))

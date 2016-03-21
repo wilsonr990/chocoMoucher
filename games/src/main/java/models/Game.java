@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by wilsonr on 2/24/2016.
  */
-public interface GameHandler {
+public interface Game {
 
     void feed(ImageHolder image) throws ErrorInImageResources;
 
@@ -30,5 +30,5 @@ public interface GameHandler {
 
     void updateGameVariables(ImageHolder image) throws ErrorInImageResources;
 
-    Map<ChocoMouche.Property, Object> getGameProperties();
+    Map<Object, Object> getGameProperties();
 }

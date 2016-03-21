@@ -1,25 +1,27 @@
 package controller;
 
-import models.Player;
-import models.Recorder;
+import models.*;
 import views.PlayerView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PlayerController implements ActionListener {
-    private Recorder recorder;
 
     public enum Actions {
-        StartPlaying, StopPlaying
+        StartPlaying, StopPlaying;
+
     }
 
     private PlayerView mainView;
-    private Player player;
+    private Recorder recorder;
+    private final Game game;
+    private PlayerModel playerModel;
 
-    public PlayerController(PlayerView view, Player modelPlayer, Recorder modelRecorder) {
+    public PlayerController(PlayerView view, Game modelGame, PlayerModel modelPlayer, Recorder modelRecorder) {
         mainView = view;
-        player = modelPlayer;
+        game = modelGame;
+        playerModel = modelPlayer;
         recorder = modelRecorder;
 
         updateView();
@@ -28,10 +30,10 @@ public class PlayerController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals(Actions.StartPlaying.name())) {
-            player.startPlaying();
+            playerModel.startPlaying();
             recorder.startRecording();
         } else if (command.equals(Actions.StopPlaying.name())) {
-            player.stopPlaying();
+            playerModel.stopPlaying();
             recorder.stopRecording();
         }
         mainView.repaint();

@@ -1,11 +1,12 @@
-package models;/*
+package models.impl;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-import Exceptions.GameHasEnded;
-import models.impl.ChocoMouche;
+import models.BasicPlayer;
+import models.Game;
+import models.GameInterface;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -13,15 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static models.BasicGameHandler.Status.PlayingGame;
-import static models.BasicGameHandler.Status.WaitingToStart;
-import static models.impl.ChocoMouche.Property.Lives;
-import static models.impl.ChocoMouche.Property.TurnPercentage;
-
 /**
  * @author wilsonr
  */
-public class ChocomoucherAnalizer extends Player {
+public class ChocomouchePlayer extends BasicPlayer {
     private int[][] map;
     private List<Point> numbers;
     public double[][] probabilities;
@@ -30,20 +26,21 @@ public class ChocomoucherAnalizer extends Player {
     private int lives;
     private List<Point> moves;
     private Point lastMove;
-    private boolean done=false;
+    private double minProbability;
 
-    public ChocomoucherAnalizer(ChocoMouche chocoMouche, GameInterface gameInterface) {
-        super(chocoMouche, gameInterface);
+    public ChocomouchePlayer(Game chocoMouche, GameInterface gameInterface) {
+        super(chocoMouche);
 
-        this.lives = 3;
         restartData();
     }
 
     private void restartData() {
+        this.minProbability = 1;
         this.probabilities = new double[8][9];
         this.ocurrencesOfMines = null;
         this.numbers = new LinkedList<Point>();
         this.moves = new ArrayList<Point>();
+        this.lives = 3;
 
         map = new int[8][9];
         for (int i = 0; i < 8; i++)
@@ -73,8 +70,8 @@ public class ChocomoucherAnalizer extends Player {
         return probabilities;
     }
 
-    public List<Point> bestMove() throws GameHasEnded {
-        double minProbability = 2;
+    public List<Point> bestMove() {
+        minProbability = 2;
         LinkedList<Point> moves = new LinkedList<Point>();
         for (int k = 0; k < 8; k++)
             for (int l = 0; l < 9; l++)
@@ -85,9 +82,6 @@ public class ChocomoucherAnalizer extends Player {
 
         if (!moves.isEmpty())
             return moves;
-
-        if (minProbability == 1)
-            throw new GameHasEnded();
 
         for (int k = 0; k < 8; k++)
             for (int l = 0; l < 9; l++)
@@ -143,7 +137,7 @@ public class ChocomoucherAnalizer extends Player {
                 else
                     increment = calculateCombinationsForNextNeighbor(numberIndex, neighbors);
                 numberOfCombinations += increment;
-                if(increment>0)
+                if (increment > 0)
                     ocurrencesOfMines[neighbor.x][neighbor.y] += increment;
                 probabilities[neighbor.x][neighbor.y] = 0;
             }
@@ -182,7 +176,7 @@ public class ChocomoucherAnalizer extends Player {
             for (int j = 0; j < 9; j++) {
                 if (probabilities[i][j] > 0 && probabilities[i][j] < 1)
                     probabilities[i][j] = -1;
-                if (i==lastMove.x && j==lastMove.y)
+                if (i == lastMove.x && j == lastMove.y)
                     probabilities[i][j] = -1;
             }
     }
@@ -213,57 +207,43 @@ public class ChocomoucherAnalizer extends Player {
         return this.map[lastMove.x][lastMove.y];
     }
 
-    @Override
-    protected void Play() throws GameHasEnded {
-        System.out.println("IN PLAY");
-        Map<ChocoMouche.Property, Object> gameProperties = gameHandler.getGameProperties();
-        map = (int[][]) gameProperties.get(ChocoMouche.Property.Map);
-        Integer turnPercent = (Integer) gameProperties.get(TurnPercentage);
-        Integer lives = (Integer) gameProperties.get(Lives);
-        if (gameHandler.getStatus().equals(WaitingToStart)) {
-            System.out.println("  Detecting Game");
-            restartData();
-            GameInterface.MoveMouseTo(new Point(0, 0));
-        } else if (gameHandler.getStatus().equals(PlayingGame)) {
-            System.out.println("  Playing");
-            if (lives != this.lives) {
-                System.out.println("    live lost!!");
-                this.lives = lives;
-                restartData();
-            } else if (turnPercent < 99) {
-                if(!done) {
-                    System.out.println("    deciding");
-                    if (lastMove != null) {
-                        System.out.println("  (updateMove)");
-                        update(lastMove, map);
-                    }
-                    lastMove = decideNextMove();
-
-                    GameInterface.MoveMouseTo(lastMove);
-                }
-                else {
-                    System.out.println("    move: " + lastMove.x + " " + lastMove.y);
-
-                    System.out.println("sssssssssss "+numbers.size());
-                }
-                done=true;
-            }else if (turnPercent >=99) {
-                done=false;
-                if(lastMove!=null)
-                    System.out.println("    last: " + lastMove.x + " " + lastMove.y);
-            }else {
-                System.out.println("    wait, Im not sure");
-            }
-        } else {
-            System.out.println("  unknown state!!");
-        }
-    }
-
-    private Point decideNextMove() throws GameHasEnded {
+    private Point decideNextMove() {
         findProbabilities();
         moves = bestMove();
 
         //int random = (int) (Math.random() * (moves.size() - 1));
         return moves.remove(0);
+    }
+
+    public void reset() {
+        System.out.println("reseting");
+        restartData();
+    }
+
+    public void update(Map<Object, Object> gameProperties) {
+        Integer turnPercentage = (Integer) game.getGameProperties().get(ChocoMouche.Property.TurnPercentage);
+        if (lastMove != null && turnPercentage == 98) {
+            System.out.println("updating");
+            update(lastMove, (int[][]) game.getGameProperties().get(ChocoMouche.Property.Map));
+        }
+    }
+
+    public void decideMove() {
+        if (minProbability == 0 && !moves.isEmpty())
+            lastMove = moves.remove(0);
+        else {
+            System.out.println("deciding move");
+            lastMove = decideNextMove();
+        }
+    }
+
+    public void move() {
+        Integer turnPercentage = (Integer) game.getGameProperties().get(ChocoMouche.Property.TurnPercentage);
+        if (turnPercentage == 98) {
+            System.out.println("moving");
+            GameInterface.MoveMouseTo(lastMove);
+        } else {
+            System.out.println("waiting");
+        }
     }
 }

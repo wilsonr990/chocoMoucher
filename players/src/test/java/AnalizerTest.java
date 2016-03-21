@@ -4,10 +4,9 @@
  * and open the template in the editor.
  */
 
-import Exceptions.GameHasEnded;
 import models.GameInterface;
 import models.impl.ChocoMouche;
-import models.ChocomoucherAnalizer;
+import models.impl.ChocomouchePlayer;
 import org.junit.*;
 
 import java.awt.*;
@@ -15,7 +14,6 @@ import java.awt.*;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author wilsonr
  */
 public class AnalizerTest {
@@ -41,294 +39,271 @@ public class AnalizerTest {
 
     @Test
     public void testProbabilityWhenMapIsInitial() {
-        try {
-            double[][] result ={{0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
+        double[][] result = {{0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(0,0), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.005);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(0, 0), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.005);
     }
 
     @Test
     public void testProbabilityWhenOnlyABombInMap() {
-        try {
-            int[][] map ={{ 9,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1}};
-            double[][] result ={{1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
+        int[][] map = {{9, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1}};
+        double[][] result = {{1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            a.update(new Point(0,0), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        a.update(new Point(0, 0), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(0,1), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.01);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(0, 1), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.01);
     }
 
     @Test
     public void testProbabilityWhenManyBombsInMap() {
-        try {
-            int[][] map ={{ 9,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1, 9},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1, 9,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1, 9,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1}};
-            double[][] result ={{1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,  1},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,1.0,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,  1,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
+        int[][] map = {{9, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, 9},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, 9, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, 9, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1}};
+        double[][] result = {{1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                if (map[i][j] != -1)
+                    a.update(new Point(i, j), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(0,1), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.01);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(0, 1), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.01);
     }
 
     @Test
     public void testProbabilityWhenNumbersAlredyHaveTheirBombsUncovered() {
-        try {
-            int[][] map ={{ 1, 9,-1,-1,-1,-1, 9, 2, 9},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1, 9, 1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                { 9, 9,-1,-1,-1,-1,-1,-1,-1},
-                { 3, 9,-1,-1,-1,-1,-1, 1, 1},
-                {-1, 2, 9,-1,-1,-1,-1,-1, 9}};
-            double[][] result ={{  0,  1,0.5,0.5,0.5,0.5,  1,  0,  1},
-                {  0,  0,0.5,  0,  0,  0,  0,  0,  0},
-                {0.5,0.5,0.5,  1,  0,  0,0.5,0.5,0.5},
-                {0.5,0.5,0.5,  0,  0,  0,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {  1,  1,0.5,0.5,0.5,0.5,  0,  0,  0},
-                {  0,  1,  0,0.5,0.5,0.5,  0,  0,  0},
-                {  0,  0,  1,0.5,0.5,0.5,  0,  0,  1}};
+        int[][] map = {{1, 9, -1, -1, -1, -1, 9, 2, 9},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, 9, 1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {9, 9, -1, -1, -1, -1, -1, -1, -1},
+                {3, 9, -1, -1, -1, -1, -1, 1, 1},
+                {-1, 2, 9, -1, -1, -1, -1, -1, 9}};
+        double[][] result = {{0, 1, 0.5, 0.5, 0.5, 0.5, 1, 0, 1},
+                {0, 0, 0.5, 0, 0, 0, 0, 0, 0},
+                {0.5, 0.5, 0.5, 1, 0, 0, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0, 0, 0, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {1, 1, 0.5, 0.5, 0.5, 0.5, 0, 0, 0},
+                {0, 1, 0, 0.5, 0.5, 0.5, 0, 0, 0},
+                {0, 0, 1, 0.5, 0.5, 0.5, 0, 0, 1}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                if (map[i][j] != -1)
+                    a.update(new Point(i, j), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(1,0), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.01);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(1, 0), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.01);
     }
 
     @Test
     public void testProbabilitiesForIndividualNumbers() {
-        try {
-            int[][] map ={{ 1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1, 1},
-                { 2,-1,-1, 4,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1, 9, 2,-1,-1,-1}};
-            double[][] result ={{0.0,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.2,0.2},
-                {0.4,0.4,0.5,0.5,0.5,0.5,0.5,0.2,  0},
-                {  0,0.4,0.5,  0,0.5,0.5,0.5,0.2,0.2},
-                {0.4,0.4,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.2,0.2,0.2,0.5,0.5},
-                {0.5,0.5,0.5,0.5,  1,  0,0.2,0.5,0.5}};
+        int[][] map = {{1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, 1},
+                {2, -1, -1, 4, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, 9, 2, -1, -1, -1}};
+        double[][] result = {{0.0, 0.3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.3, 0.3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0.2},
+                {0.4, 0.4, 0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0},
+                {0, 0.4, 0.5, 0, 0.5, 0.5, 0.5, 0.2, 0.2},
+                {0.4, 0.4, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.2, 0.2, 0.2, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 1, 0, 0.2, 0.5, 0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                if (map[i][j] != -1)
+                    a.update(new Point(i, j), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(2,7), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.05);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(2, 7), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.05);
     }
 
     @Test
     public void testProbabilitiesForCloseNumbers() {
-        try {
-            int[][] map ={{ 1,-1, 1,-1,-1,-1,-1,-1, 1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1, 1},
-                {-1,-1,-1,-1,-1,-1,-1,-1, 2},
-                { 1,-1,-1,-1,-1,-1,-1,-1,-1},
-                { 1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                { 1,-1,-1,-1,-1, 3, 1,-1, 1}};
-            double[][] result ={{0.0,0.2,  0,0.2,0.5,0.5,0.5,0.7,  0},
-                {0.6,0.2,0.2,0.2,0.5,0.5,0.5,0.2,0.2},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.3,  0},
-                {0.3,0.3,0.5,0.5,0.5,0.5,0.5,0.3,  0},
-                {  0,0.2,0.5,0.5,0.5,0.5,0.5,0.7,0.7},
-                {  0,0.2,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.3,0.3,0.5,0.5,  1,0.5,0.5,  0,  1},
-                {  0,0.3,0.5,0.5,  1,  0,  0,  0,  0}};
+        int[][] map = {{1, -1, 1, -1, -1, -1, -1, -1, 1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, 1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, 2},
+                {1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {1, -1, -1, -1, -1, 3, 1, -1, 1}};
+        double[][] result = {{0.0, 0.2, 0, 0.2, 0.5, 0.5, 0.5, 0.7, 0},
+                {0.6, 0.2, 0.2, 0.2, 0.5, 0.5, 0.5, 0.2, 0.2},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.3, 0},
+                {0.3, 0.3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.3, 0},
+                {0, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.7, 0.7},
+                {0, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.3, 0.3, 0.5, 0.5, 1, 0.5, 0.5, 0, 1},
+                {0, 0.3, 0.5, 0.5, 1, 0, 0, 0, 0}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                if( map[i][j]!=-1 )
-                    a.update( new Point(i,j), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                if (map[i][j] != -1)
+                    a.update(new Point(i, j), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(6,7), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.04);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(6, 7), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.04);
     }
 
     @Test
     public void testExpantion() {
-        try {
-            int[][] map ={{ 0, 0, 0, 1,-1,-1,-1,-1,-1},
-                { 1, 1, 0, 1,-1,-1,-1,-1,-1},
-                {-1, 1, 0, 1,-1,-1,-1,-1,-1},
-                {-1, 1, 1, 1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1, 2,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1, 3, 2},
-                {-1,-1,-1,-1,-1,-1,-1, 1, 0}};
-            double[][] result ={{  0,  0,  0,  0,  0,0.5,0.5,0.5,0.5},
-                {  0,  0,  0,  0,  1,0.5,0.5,0.5,0.5},
-                {  1,  0,  0,  0,  0,0.5,0.5,0.5,0.5},
-                {  0,  0,  0,  0,  0,0.5,0.5,0.5,0.5},
-                {  0,  0,  0,  1,  0,0.2,0.2,0.2,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.2,  0,  1,  1},
-                {0.5,0.5,0.5,0.5,0.5,0.2,0.2,  0,  0},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.8,  0,  0}};
+        int[][] map = {{0, 0, 0, 1, -1, -1, -1, -1, -1},
+                {1, 1, 0, 1, -1, -1, -1, -1, -1},
+                {-1, 1, 0, 1, -1, -1, -1, -1, -1},
+                {-1, 1, 1, 1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, 2, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, 3, 2},
+                {-1, -1, -1, -1, -1, -1, -1, 1, 0}};
+        double[][] result = {{0, 0, 0, 0, 0, 0.5, 0.5, 0.5, 0.5},
+                {0, 0, 0, 0, 1, 0.5, 0.5, 0.5, 0.5},
+                {1, 0, 0, 0, 0, 0.5, 0.5, 0.5, 0.5},
+                {0, 0, 0, 0, 0, 0.5, 0.5, 0.5, 0.5},
+                {0, 0, 0, 1, 0, 0.2, 0.2, 0.2, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0, 1, 1},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0.2, 0, 0},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.8, 0, 0}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            a.update( new Point(0,0), map);
-            a.update( new Point(7,8), map);
-            a.update( new Point(5,6), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        a.update(new Point(0, 0), map);
+        a.update(new Point(7, 8), map);
+        a.update(new Point(5, 6), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(0,4), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ ){
-                System.out.println(i+" "+j);
-                Assert.assertEquals( result[i][j], p[i][j], 0.04);
+        assertEquals(new Point(0, 4), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++) {
+                System.out.println(i + " " + j);
+                Assert.assertEquals(result[i][j], p[i][j], 0.04);
             }
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
     }
 
     @Test
     public void testExpantion1() {
-        try {
-            int[][] map ={{ 0, 1,-1,-1,-1,-1,-1,-1,-1},
-                { 2, 3,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1, 2,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1},
-                {-1,-1,-1,-1,-1,-1,-1,-1,-1}};
-            double[][] result ={{  0,  0,0.8,0.5,0.5,0.5,0.5,0.5,0.5},
-                {  0,  0,0.2,0.2,0.5,0.5,0.5,0.5,0.5},
-                {  1,  1,  0,0.2,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.2,0.2,0.2,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
+        int[][] map = {{0, 1, -1, -1, -1, -1, -1, -1, -1},
+                {2, 3, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, 2, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1}};
+        double[][] result = {{0, 0, 0.8, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0, 0, 0.2, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {1, 1, 0, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.2, 0.2, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            a.update( new Point(0,0), map);
-            a.update( new Point(2,2), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        a.update(new Point(0, 0), map);
+        a.update(new Point(2, 2), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(1,2), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.04);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(1, 2), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.04);
     }
 
     @Test
     public void testExpantion2() {
-        try {
-            int[][] map ={{ 0, 2,-1,-1,-1,-1,1,0,0},
-                    { 1, 3,-1,-1,-1,-1,-1,-1,-1},
-                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
-                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
-                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
-                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
-                    { -1, -1,-1,-1,-1,-1,-1,-1,-1},
-                    {-1,-1,-1,-1,-1,-1,-1,-1,-1}};
-            double[][] result ={{  0,  0,0.8,0.5,0.5,0.5,0.5,0.5,0.5},
-                    {  0,  0,0.2,0.2,0.5,0.5,0.5,0.5,0.5},
-                    {  1,  1,  0,0.2,0.5,0.5,0.5,0.5,0.5},
-                    {0.5,0.2,0.2,0.2,0.5,0.5,0.5,0.5,0.5},
-                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
-                    {0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5}};
+        int[][] map = {{0, 2, -1, -1, -1, -1, 1, 0, 0},
+                {1, 3, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1}};
+        double[][] result = {{0, 0, 0.8, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0, 0, 0.2, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {1, 1, 0, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.2, 0.2, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5},
+                {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5}};
 
-            ChocomoucherAnalizer a = new ChocomoucherAnalizer(new ChocoMouche(), new GameInterface());
-            a.update( new Point(0,0), map);
-            //a.update( new Point(2,2), map);
-            double[][] p = a.findProbabilities();
+        ChocomouchePlayer a = new ChocomouchePlayer(new ChocoMouche(), new GameInterface());
+        a.update(new Point(0, 0), map);
+        //a.update( new Point(2,2), map);
+        double[][] p = a.findProbabilities();
 
-            assertEquals( new Point(1,2), a.bestMove().get(0));
-            for( int i=0; i<8; i++ ) for( int j=0; j<9; j++ )
-                Assert.assertEquals( result[i][j], p[i][j], 0.04);
-        } catch (GameHasEnded ex) {
-            Assert.fail( "Game Must not have ended" );
-        }
+        assertEquals(new Point(1, 2), a.bestMove().get(0));
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                Assert.assertEquals(result[i][j], p[i][j], 0.04);
     }
 }
