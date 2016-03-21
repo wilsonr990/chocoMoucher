@@ -57,21 +57,22 @@ public class Recorder {
         thread = new Thread() {
             @Override
             public void run() {
+                System.out.println("Started");
                 try {
                     int i = 0;
                     ImageHolder oldImage = new ImageHolder(1, 1);
                     game.reset();
                     while (!isInterrupted()) {
                         ImageHolder image = new ImageHolder((Rectangle) null);
-                        if (game.gameDetected())
+                        if (game.gameDetected()) {
                             image.getSubImage(new Rectangle(game.getLocation(), game.getDimension()));
-                        game.feed(image);
-                        if (!game.gameDetected() || game.gameEnded()) {
-                            break;
+                            if (oldImage.findSubImage(image) == null) {
+                                image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
+                            }
                         }
-
-                        if (oldImage.findSubImage(image) == null) {
-                            image.saveImage(finalFile.getAbsolutePath() + i++ + ".png");
+                        game.feed(image);
+                        if (game.gameEnded()) {
+                            break;
                         }
                         oldImage = image;
                     }
@@ -84,6 +85,8 @@ public class Recorder {
                 } catch (ErrorInImageResources errorInImageResources) {
                     showMessageDialog(null, "Cant manage files!");
                 }
+                showMessageDialog(null, "Game Ended!");
+                System.out.println("Stopped");
             }
         };
         thread.start();
@@ -103,6 +106,8 @@ public class Recorder {
     }
 
     public String getGameStatus() {
-        return game.getGameStatus();
+        return game.getGameStatus()
+                + "\n"
+                + game.getGameProperties();
     }
 }
