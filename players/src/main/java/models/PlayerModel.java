@@ -37,15 +37,14 @@ public class PlayerModel{
                     player.reset();
                     while (!isInterrupted()) {
                         ImageHolder image = new ImageHolder((Rectangle) null);
-                        if (game.gameDetected())
+                        if (game.gameDetected()) {
                             image.getSubImage(new Rectangle(game.getLocation(), game.getDimension()));
+                            player.play();
+                        }
                         game.feed(image);
                         if (!game.gameDetected() || game.gameEnded()) {
                             showMessageDialog(null, "Game Ended or closed!");
                             break;
-                        }
-                        else{
-                            player.play();
                         }
                     }
                 } catch (CantCaptureScreen cantCaptureScreen) {
