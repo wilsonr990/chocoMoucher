@@ -20,6 +20,9 @@ public class MainRecorder {
             public Map<Object, Object> getGameProperties() {
                 return null;
             }
+            public String getDrawableMap() {
+                return "map";
+            }
         });
         RecorderController controller = new RecorderController(mainView, recorder);
 

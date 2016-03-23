@@ -16,7 +16,7 @@ public class MainPlayer {
         Recorder recorderModel = new Recorder(game);
         recorderModel.setGameToRecord("LIVE");
 
-        PlayerController controller = new PlayerController(mainView, game, playerModel, recorderModel);
+        PlayerController controller = new PlayerController(mainView, playerModel, recorderModel);
 
         mainView.setController(controller);
         mainView.setVisible(true);

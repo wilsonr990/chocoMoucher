@@ -11,7 +11,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 /**
  * Created by wilsonr on 2/7/2016.
  */
-public class PlayerModel{
+public class PlayerModel {
     private final Player player;
     protected Game game;
     private Thread thread;
@@ -42,7 +42,7 @@ public class PlayerModel{
                             player.play();
                         }
                         game.feed(image);
-                        if (!game.gameDetected() || game.gameEnded()) {
+                        if (game.gameEnded()) {
                             showMessageDialog(null, "Game Ended or closed!");
                             break;
                         }
@@ -50,8 +50,10 @@ public class PlayerModel{
                 } catch (CantCaptureScreen cantCaptureScreen) {
                     showMessageDialog(null, "Cant take screenshot!");
                 } catch (ErrorInImageResources errorInImageResources) {
-                    showMessageDialog(null, "filee???!");
+                    showMessageDialog(null, "Cant manage files!");
                 }
+                showMessageDialog(null, "Game Ended!");
+                System.out.println("Stopped");
             }
         };
         thread.start();
@@ -60,5 +62,14 @@ public class PlayerModel{
     public void stopPlaying() {
         System.out.println("Stop");
         thread.interrupt();
+    }
+
+    public String getGameStatus() {
+        return game.getGameStatus()
+                + "\n"
+                + player.getPlayerStatus()
+                + "\n"
+                + game.getGameProperties().toString().replace(",", "\n")
+                + game.getDrawableMap();
     }
 }

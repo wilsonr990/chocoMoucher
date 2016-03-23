@@ -14,11 +14,11 @@ public class PlayerView extends JFrame {
     private JButton startRecButton;
     private JButton stopRecButton;
     private JPanel mainPanel;
+    private JTextArea statusLabel;
 
     public PlayerView() {
         setTitle("Game Recorder");
         setSize(400, 400);
-        setLayout(new GridLayout(3, 1));
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
@@ -40,6 +40,10 @@ public class PlayerView extends JFrame {
     public void setController(PlayerController controller) {
         startRecButton.addActionListener(controller);
         stopRecButton.addActionListener(controller);
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel.setText(statusLabel);
     }
 }
 
