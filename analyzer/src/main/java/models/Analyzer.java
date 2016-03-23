@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -43,7 +44,7 @@ public class Analyzer {
 
         File[] files = file.listFiles();
         for (File f : files) {
-            if (!f.getName().equals("chocomouche")) continue;
+            if (!f.getName().equals("LIVE")) continue;
             System.out.println("will analyze " + f.getName());
 
             final File[] imageFiles = f.listFiles();
@@ -66,9 +67,11 @@ public class Analyzer {
             if (!finalFile.exists()) {
                 finalFile.mkdir();
             }
-            //Differences(imageFiles, finalFile);
-            //Similarities(imageFiles, finalFile);
+//            Differences(imageFiles, finalFile);
+//            Similarities(imageFiles, finalFile);
             ApplyMask(imageFiles, finalFile);
+//            Unique(imageFiles, finalFile);
+//            FitPattern(imageFiles, finalFile, "f.png");
         }
 
     }
@@ -99,6 +102,7 @@ public class Analyzer {
                 } catch (ErrorInImageResources cantReadFile) {
                     showMessageDialog(null, "Cant read file!");
                 }
+                showMessageDialog(null, "ENDED PROCESS!!");
             }
         };
         thread.start();
@@ -127,6 +131,64 @@ public class Analyzer {
                 } catch (ErrorInImageResources cantReadFile) {
                     showMessageDialog(null, "Cant read file!");
                 }
+                showMessageDialog(null, "ENDED PROCESS!!");
+            }
+        };
+        thread.start();
+        threads.add(thread);
+    }
+
+    private void Unique(final File[] imageFiles, final File finalFile) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int i = 0;
+                    ImageHolder current = null;
+                    for (File image : imageFiles) {
+                        if (interrupted()) return;
+
+                        if (current == null) current = new ImageHolder(image);
+                        else current = current.Similarity(new ImageHolder(image));
+                    }
+                    current.saveImage(finalFile.getAbsolutePath() + "\\" + i++ + ".png");
+                    threads.remove(this);
+                } catch (FileAlreadyExists fileAlreadyExists) {
+                    showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
+                } catch (IOException e) {
+                    showMessageDialog(null, "Cant manage files!");
+                } catch (ErrorInImageResources cantReadFile) {
+                    showMessageDialog(null, "Cant read file!");
+                }
+                showMessageDialog(null, "ENDED PROCESS!!");
+            }
+        };
+        thread.start();
+        threads.add(thread);
+    }
+
+    private void FitPattern(final File[] imageFiles, final File finalFile, final String patternFile) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int i = 0;
+                    ImageHolder pattern = new ImageHolder(patternFile);
+                    for (File image : imageFiles) {
+                        if (interrupted()) return;
+
+                        if (new ImageHolder(image).findSubImage(pattern) != null)
+                            pattern.saveImage(finalFile.getAbsolutePath() + "\\r" + i++ + ".png");
+                    }
+                    threads.remove(this);
+                } catch (FileAlreadyExists fileAlreadyExists) {
+                    showMessageDialog(null, "The path already exists! ( " + dataPath + " )");
+                } catch (IOException e) {
+                    showMessageDialog(null, "Cant manage files!");
+                } catch (ErrorInImageResources cantReadFile) {
+                    showMessageDialog(null, "Cant read file!");
+                }
+                showMessageDialog(null, "ENDED PROCESS!!");
             }
         };
         thread.start();
@@ -142,23 +204,33 @@ public class Analyzer {
                     int i = 0;
                     for (File image : imageFiles) {
                         if (interrupted()) return;
+                        List<ImageHolder> saved = new ArrayList<ImageHolder>();
+                        saved.add(new ImageHolder("1.png"));
+                        saved.add(new ImageHolder("2.png"));
+                        saved.add(new ImageHolder("3.png"));
+                        saved.add(new ImageHolder("4.png"));
+                        saved.add(new ImageHolder("f.png"));
+//                        saved.add(new ImageHolder("f2.png"));
+//                        saved.add(new ImageHolder("f3.png"));
+//                        saved.add(new ImageHolder("f4.png"));
+//                        saved.add(new ImageHolder("f5.png"));
+//                        saved.add(new ImageHolder("f6.png"));
+//                        saved.add(new ImageHolder("f7.png"));
+//                        saved.add(new ImageHolder("f8.png"));
+//                        saved.add(new ImageHolder("f9.png"));
+//                        saved.add(new ImageHolder("f10.png"));
+                        saved.add(new ImageHolder("a.png"));
+                        saved.add(new ImageHolder("l.png"));
+                        saved.add(new ImageHolder("c.png"));
+                        saved.add(new ImageHolder("b.png"));
 
                         ImageHolder current = new ImageHolder(image);
                         ArrayList<ImageHolder> masked = current.getMaskedImages(mask);
                         for (ImageHolder img : masked) {
-                            if (img.findSubImage(new ImageHolder("1.png"))==null
-                                    && img.findSubImage(new ImageHolder("2.png"))==null
-                                    && img.findSubImage(new ImageHolder("3.png"))==null
-                                    && img.findSubImage(new ImageHolder("4.png"))==null
-                                    && img.findSubImage(new ImageHolder("f1.png"))==null
-                                    && img.findSubImage(new ImageHolder("f2.png"))==null
-                                    && img.findSubImage(new ImageHolder("f3.png"))==null
-                                    && img.findSubImage(new ImageHolder("f4.png"))==null
-                                    && img.findSubImage(new ImageHolder("a.png"))==null
-                                    && img.findSubImage(new ImageHolder("l.png"))==null
-                                    && img.findSubImage(new ImageHolder("c.png"))==null
-                                    && img.findSubImage(new ImageHolder("b.png"))==null)
+                            if (!alreadySaved(img, saved)) {
+                                saved.add(img);
                                 img.saveImage(finalFile.getAbsolutePath() + "\\" + i++ + ".png");
+                            }
                         }
                     }
                     threads.remove(this);
@@ -169,6 +241,15 @@ public class Analyzer {
                 } catch (ErrorInImageResources cantReadFile) {
                     showMessageDialog(null, "Cant read file!");
                 }
+                showMessageDialog(null, "ENDED PROCESS!!");
+            }
+
+            private boolean alreadySaved(ImageHolder img, List<ImageHolder> saved) {
+                for (ImageHolder image : saved) {
+                    if (img.findSubImage(image) != null)
+                        return true;
+                }
+                return false;
             }
         };
         thread.start();

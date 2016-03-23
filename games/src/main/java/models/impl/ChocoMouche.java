@@ -77,13 +77,7 @@ public class ChocoMouche extends BasicGame {
     private void readImages() {
         try {
             images.put("mask", new ImageHolder("mask.png"));
-            images.put("f1", new ImageHolder("f1.png"));
-            images.put("f2", new ImageHolder("f2.png"));
-            images.put("f3", new ImageHolder("f3.png"));
-            images.put("f4", new ImageHolder("f4.png"));
-            images.put("f5", new ImageHolder("f5.png"));
-            images.put("f6", new ImageHolder("f6.png"));
-            images.put("f7", new ImageHolder("f7.png"));
+            images.put("f", new ImageHolder("f.png"));
             images.put("a", new ImageHolder("a.png"));
             images.put("c", new ImageHolder("c.png"));
             images.put("l", new ImageHolder("l.png"));
@@ -118,13 +112,7 @@ public class ChocoMouche extends BasicGame {
             return 7;
             else if(screenImg.findSubImage(symbols[8])!=null )
             return 8;*/
-        else if (p.findSubImage(images.get("f1")) != null
-                || p.findSubImage(images.get("f2")) != null
-                || p.findSubImage(images.get("f3")) != null
-                || p.findSubImage(images.get("f4")) != null
-                || p.findSubImage(images.get("f5")) != null
-                || p.findSubImage(images.get("f6")) != null
-                || p.findSubImage(images.get("f7")) != null)
+        else if (p.findSubImage(images.get("f")) != null)
             return 9;
         else if (p.findSubImage(images.get("c")) != null
                 || p.findSubImage(images.get("a")) != null)
