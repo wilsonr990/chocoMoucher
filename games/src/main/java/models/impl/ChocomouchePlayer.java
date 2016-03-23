@@ -110,6 +110,7 @@ public class ChocomouchePlayer extends BasicPlayer {
             int cellPositionY = (int) (game.getLocation().y + mapLocation.y + move.y * cellDimension.getHeight() + cellDimension.getHeight() / 2);
             GameInterface.MoveMouseTo(new Point(cellPositionX, cellPositionY));
             GameInterface.MouseClick();
+            GameInterface.MouseClick();
             return true;
         }
         return false;
