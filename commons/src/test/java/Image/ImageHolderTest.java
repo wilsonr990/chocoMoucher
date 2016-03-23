@@ -112,6 +112,18 @@ public class ImageHolderTest {
             fail("Image should be loaded");
         }
     }
+
+    @Test
+    public void testFindSubImageWorksInDetectedBug() {
+        try {
+            ImageHolder img = new ImageHolder("testImageWithoutFirstColumn.png");
+            ImageHolder instance = new ImageHolder("testImage.png");
+            Point result = instance.findSubImage(img);
+            assertEquals(new Point(1,0), result);
+        } catch (ErrorInImageResources ex) {
+            fail("Image should be loaded");
+        }
+    }
     
     @Test
     public void throwExceptionIfFileDoesntExists() {
