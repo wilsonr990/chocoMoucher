@@ -102,9 +102,21 @@ public class ImageHolderTest {
     }
     
     @Test
-    public void testFindSubImageReturnNullIfImgIsNotFoundInInstance() {
+    public void testFindSubImageReturnNullIfSubImageIsHigherThanInstance() {
         try {
             ImageHolder img = new ImageHolder("testImage.png");
+            ImageHolder instance = new ImageHolder("testSubImage.png");
+            Point result = instance.findSubImage(img);
+            assertEquals(null, result);
+        } catch (ErrorInImageResources ex) {
+            fail("Image should be loaded");
+        }
+    }
+
+    @Test
+    public void testFindSubImageReturnNullIfImgIsNotFoundInInstance() {
+        try {
+            ImageHolder img = new ImageHolder("testSubImageModified.png");
             ImageHolder instance = new ImageHolder("testSubImage.png");
             Point result = instance.findSubImage(img);
             assertEquals(null, result);

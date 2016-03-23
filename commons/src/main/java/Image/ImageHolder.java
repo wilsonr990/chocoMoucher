@@ -97,19 +97,17 @@ public class ImageHolder {
     }
 
     public Point findSubImage(ImageHolder img) {
-        int widthDiference = buffer.getWidth() - img.getWidth() + 1;
-        int heigthDiference = buffer.getHeight() - img.getHeight() + 1;
-        if (widthDiference < 1 || heigthDiference < 1)
+        int widthDifference = buffer.getWidth() - img.getWidth() + 1;
+        int heigthDifference = buffer.getHeight() - img.getHeight() + 1;
+        if (widthDifference <= 0 || heigthDifference <= 0)
             return null;
 
         int validatedPixels = 0;
         int imgSize = img.getWidth() * img.getHeight();
-        for (int i = 0; i <= widthDiference * heigthDiference; i++) {
-            int X = 0, Y = 0;
-            if (widthDiference != 0) {
-                X = i % widthDiference;
-                Y = i / widthDiference;
-            }
+        for (int i = 0; i < widthDifference * heigthDifference; i++) {
+            int X = i % widthDifference;
+            int Y = i / widthDifference;
+
             for (int j = 0; j < imgSize; j++) {
                 int x = j % img.getWidth();
                 int y = j / img.getWidth();
@@ -151,7 +149,7 @@ public class ImageHolder {
 
             int rgbDiff = buffer.getRGB(x, y) - img.getRGB(x, y);
             if (rgbDiff == 0)
-                result.setRGB(x, y, Color.BLACK.getRGB());
+                result.setRGB(x, y, 0);
             else
                 result.setRGB(x, y, buffer.getRGB(x, y));
         }
@@ -170,7 +168,7 @@ public class ImageHolder {
             if (buffer.getRGB(x, y) == img.getRGB(x, y))
                 result.setRGB(x, y, buffer.getRGB(x, y));
             else
-                result.setRGB(x, y, Color.BLACK.getRGB());
+                result.setRGB(x, y, 0);
         }
         return result;
     }
