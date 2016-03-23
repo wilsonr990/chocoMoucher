@@ -31,4 +31,8 @@ public interface Game {
     void updateGameVariables(ImageHolder image) throws ErrorInImageResources;
 
     Map<Object, Object> getGameProperties();
+
+    String getDrawableMap();
+
+    boolean playingGame();
 }

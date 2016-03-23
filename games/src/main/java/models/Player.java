@@ -1,7 +1,5 @@
 package models;
 
-import java.util.Map;
-
 /**
  * Created by wilsonr on 2/24/2016.
  */
@@ -10,9 +8,11 @@ public interface Player {
 
     void reset();
 
-    void update(Map<Object, Object> gameProperties);
+    boolean update();
 
-    void decideMove();
+    boolean getBestMoves();
 
-    void move();
+    boolean move();
+
+    String getPlayerStatus();
 }

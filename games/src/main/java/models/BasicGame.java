@@ -86,6 +86,10 @@ public abstract class BasicGame implements Game {
         return gameState == Status.GameEnded;
     }
 
+    public boolean playingGame() {
+        return gameState == Status.PlayingGame;
+    }
+
     public void reset() {
         gameState = Status.DetectingGame;
         unknownCount = 0;

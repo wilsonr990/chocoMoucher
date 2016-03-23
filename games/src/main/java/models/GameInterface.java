@@ -1,12 +1,13 @@
 package models;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by wilsonr on 2/1/2016.
  */
 public class GameInterface {
-    private Robot r;
+    private static Robot r;
 
     public GameInterface() {
         try {
@@ -17,7 +18,17 @@ public class GameInterface {
 
 
     public static void MoveMouseTo(Point p) {
-        System.out.println("MOVING!! " + p.x + ", " + p.y);
+        r.mouseMove(p.x, p.y);
+    }
+
+    public static void MouseClick() {
+        try {
+            r.mousePress(MouseEvent.BUTTON1_DOWN_MASK);
+            Thread.sleep(100);
+            r.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void clickOn(Point p) {

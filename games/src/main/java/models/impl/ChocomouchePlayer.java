@@ -8,24 +8,26 @@ import models.BasicPlayer;
 import models.Game;
 import models.GameInterface;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static models.impl.ChocoMouche.Property.TurnPercentage;
+
 /**
  * @author wilsonr
  */
 public class ChocomouchePlayer extends BasicPlayer {
+    static private Integer turnPercentage;
+    private int lives;
     private int[][] map;
+
     private List<Point> numbers;
     public double[][] probabilities;
-    private int totalOfCombinations;
     private double[][] ocurrencesOfMines;
-    private int lives;
     private List<Point> moves;
-    private Point lastMove;
     private double minProbability;
 
     public ChocomouchePlayer(Game chocoMouche, GameInterface gameInterface) {
@@ -34,29 +36,117 @@ public class ChocomouchePlayer extends BasicPlayer {
         restartData();
     }
 
+    public void reset() {
+        System.out.println("reseting");
+        restartData();
+    }
+
+    public boolean update() {
+        Map<Object, Object> properties = game.getGameProperties();
+        turnPercentage = (Integer) properties.get(TurnPercentage);
+        Integer newLives = (Integer) properties.get(ChocoMouche.Property.Lives);
+        int[][] newMap = (int[][]) properties.get(ChocoMouche.Property.Map);
+
+        if (lives == 1 && newLives == 3)
+            reset();
+
+        if (turnPercentage <= 97 && mapChanged(newMap)) {
+            System.out.println("updating");
+
+            updateNumbers();
+
+            System.out.println("updated");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean mapChanged(int[][] newMap) {
+        if (map == null) {
+            map = new int[8][9];
+            for (int i = 0; i < 8; i++)
+                System.arraycopy(newMap[i], 0, map[i], 0, 9);
+            return true;
+        }
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                if (newMap[i][j] != map[i][j]) {
+                    for (int n = 0; n < 8; n++)
+                        System.arraycopy(newMap[n], 0, map[n], 0, 9);
+                    return true;
+                }
+        return false;
+    }
+
+    public boolean getBestMoves() {
+        if (turnPercentage <= 97) {
+            System.out.println("getting best moves");
+
+            if (minProbability != 0 || moves.isEmpty()) {
+                findProbabilities();
+
+                moves = bestMoves();
+
+                System.out.println("new best moves:" + moves);
+            } else {
+                System.out.println("there was pending moves!");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean move() {
+        Integer turnPercentage = (Integer) game.getGameProperties().get(TurnPercentage);
+        if (turnPercentage <= 97) {
+            System.out.println("moving");
+            int random = 0; //(int) (Math.random() * (moves.size() - 1));
+
+            Point move = moves.remove(random);
+            System.out.println("MOVEE! " + move);
+            Point mapLocation = new Point(53, 38);
+            Dimension cellDimension = new Dimension(30, 29);
+            int cellPositionX = (int) (game.getLocation().x + mapLocation.x + move.x * cellDimension.getWidth() + cellDimension.getWidth() / 2);
+            int cellPositionY = (int) (game.getLocation().y + mapLocation.y + move.y * cellDimension.getHeight() + cellDimension.getHeight() / 2);
+            GameInterface.MoveMouseTo(new Point(cellPositionX, cellPositionY));
+            GameInterface.MouseClick();
+            return true;
+        }
+        return false;
+    }
+
     private void restartData() {
+        map = null;
         this.minProbability = 1;
         this.probabilities = new double[8][9];
         this.ocurrencesOfMines = null;
         this.numbers = new LinkedList<Point>();
         this.moves = new ArrayList<Point>();
-        this.lives = 3;
 
-        map = new int[8][9];
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++)
+                probabilities[i][j] = -1;
+    }
+
+    private void updateNumbers() {
+        numbers = new ArrayList<Point>();
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 9; j++) {
-                map[i][j] = -1;
-                probabilities[i][j] = -1;
+                if (map[i][j] > 0 && map[i][j] < 9)
+                    numbers.add(new Point(i, j));
+                if (map[i][j] > 0 && map[i][j] < 10)
+                    moves.remove(new Point(i, j));
             }
     }
 
-    public double[][] findProbabilities() {
-        totalOfCombinations = 0;
+    public void findProbabilities() {
+        restartProbabilities();
+
         ocurrencesOfMines = new double[8][9];
         for (int i = 0; i < 8; i++)
             System.arraycopy(probabilities[i], 0, ocurrencesOfMines[i], 0, 9);
 
-        totalOfCombinations = calculateCombinations();
+        int totalOfCombinations = this.calculateCombinations(0);
 
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 9; j++)
@@ -66,56 +156,28 @@ public class ChocomouchePlayer extends BasicPlayer {
                     probabilities[i][j] = 0.5;
                 else if (probabilities[i][j] == -1)
                     probabilities[i][j] = ocurrencesOfMines[i][j] / totalOfCombinations;
-
-        return probabilities;
     }
 
-    public List<Point> bestMove() {
-        minProbability = 2;
-        LinkedList<Point> moves = new LinkedList<Point>();
-        for (int k = 0; k < 8; k++)
-            for (int l = 0; l < 9; l++)
-                if (probabilities[k][l] == 0 && map[k][l] == -1)
-                    moves.add(new Point(k, l));
-                else if (probabilities[k][l] < minProbability && map[k][l] == -1)
-                    minProbability = probabilities[k][l];
-
-        if (!moves.isEmpty())
-            return moves;
-
-        for (int k = 0; k < 8; k++)
-            for (int l = 0; l < 9; l++)
-                if (probabilities[k][l] == minProbability && map[k][l] == -1) {
-                    moves.add(new Point(k, l));
-                }
-        return moves;
+    private void restartProbabilities() {
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 9; j++) {
+                if (probabilities[i][j] > 0 && probabilities[i][j] < 1)
+                    probabilities[i][j] = -1;
+                if (map[i][j] >= 0 && map[i][j] <= 8)
+                    probabilities[i][j] = 0;
+                else if (map[i][j] == 9)
+                    probabilities[i][j] = 1;
+            }
     }
 
-    public boolean hasEnded() {
-        for (int k = 0; k < 8; k++)
-            for (int l = 0; l < 9; l++)
-                if (probabilities[k][l] > 0 && probabilities[k][l] < 1)
-                    return false;
+    private int calculateCombinations(int numberIndex) {
+        if (numbers.isEmpty()) return 0;
 
-        return true;
-    }
-
-    private int calculateCombinations() {
-        if (numbers.isEmpty())
-            return 0;
-
-        int numberIndex = 0;
-        return calculateCombinationsForNumber(numberIndex);
-    }
-
-    private int calculateCombinationsForNumber(int numberIndex) {
-        Point numberPos = numbers.get(numberIndex);
         int numberOfCombinations = 0;
         List<Point> neighbors = new LinkedList<Point>();
-        int missingBombs;
+        int missingBombs = findNeighborsAndMissingBombs(numbers.get(numberIndex), neighbors);
 
-        missingBombs = findNeighborsAndMissingBombs(numberPos, neighbors);
-        if (missingBombs < 0)
+        if (missingBombs < 0 || (missingBombs > 0 && neighbors.isEmpty()))
             return 0;
 
         for (Point neighbor : neighbors)
@@ -126,16 +188,15 @@ public class ChocomouchePlayer extends BasicPlayer {
             int increment = calculateCombinationsForNextNeighbor(numberIndex, neighbors);
             numberOfCombinations += increment;
         } else {
-            if (neighbors.isEmpty())
-                return 0;
             for (Point neighbor : neighbors) {
                 probabilities[neighbor.x][neighbor.y] = 1;
-                int increment;
 
+                int increment;
                 if (missingBombs > 1)
-                    increment = calculateCombinationsForNumber(numberIndex);
+                    increment = calculateCombinations(numberIndex);
                 else
                     increment = calculateCombinationsForNextNeighbor(numberIndex, neighbors);
+
                 numberOfCombinations += increment;
                 if (increment > 0)
                     ocurrencesOfMines[neighbor.x][neighbor.y] += increment;
@@ -146,17 +207,6 @@ public class ChocomouchePlayer extends BasicPlayer {
             probabilities[neigh.x][neigh.y] = -1;
 
         return numberOfCombinations;
-    }
-
-    private int calculateCombinationsForNextNeighbor(int numberIndex, List<Point> neighbors) {
-        int combinations = 1;
-        if (numbers.size() > numberIndex + 1) {
-            for (Point neigh : neighbors)
-                if (probabilities[neigh.x][neigh.y] == -1)
-                    probabilities[neigh.x][neigh.y] = 0;
-            combinations = calculateCombinationsForNumber(numberIndex + 1);
-        }
-        return combinations;
     }
 
     private int findNeighborsAndMissingBombs(Point numberPos, List<Point> neighbors) {
@@ -171,79 +221,39 @@ public class ChocomouchePlayer extends BasicPlayer {
         return missingBombs;
     }
 
-    private void restartProbabilities() {
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 9; j++) {
-                if (probabilities[i][j] > 0 && probabilities[i][j] < 1)
-                    probabilities[i][j] = -1;
-                if (i == lastMove.x && j == lastMove.y)
-                    probabilities[i][j] = -1;
-            }
-    }
-
-    private void updateNumbers(Point pos) {
-        if (probabilities[pos.x][pos.y] == -1) {
-            probabilities[pos.x][pos.y] = 0;
-            if (map[pos.x][pos.y] != 0)
-                numbers.add(new Point(pos.x, pos.y));
-            else {
-                for (int k = pos.x - 1; k <= pos.x + 1; k++)
-                    for (int l = pos.y - 1; l <= pos.y + 1; l++)
-                        if (k >= 0 && l >= 0 && k < 8 && l < 9)
-                            updateNumbers(new Point(k, l));
-            }
+    private int calculateCombinationsForNextNeighbor(int numberIndex, List<Point> neighbors) {
+        int combinations = 1;
+        if (numbers.size() > numberIndex + 1) {
+            for (Point neigh : neighbors)
+                if (probabilities[neigh.x][neigh.y] == -1)
+                    probabilities[neigh.x][neigh.y] = 0;
+            combinations = calculateCombinations(numberIndex + 1);
         }
+        return combinations;
     }
 
-    public int update(Point lastMove, int[][] m) {
-        map = m.clone();
-        restartProbabilities();
+    private List<Point> bestMoves() {
+        minProbability = 1;
+        LinkedList<Point> moves = new LinkedList<Point>();
+        for (int k = 0; k < 8; k++)
+            for (int l = 0; l < 9; l++)
+                if (probabilities[k][l] < minProbability && map[k][l] == -1)
+                    minProbability = probabilities[k][l];
 
-        if (this.map[lastMove.x][lastMove.y] == 9) {
-            probabilities[lastMove.x][lastMove.y] = 1.0;
-        } else {
-            updateNumbers(lastMove);
-        }
-        return this.map[lastMove.x][lastMove.y];
+        for (int k = 0; k < 8; k++)
+            for (int l = 0; l < 9; l++)
+                if (probabilities[k][l] == minProbability && map[k][l] == -1) {
+                    moves.add(new Point(k, l));
+                }
+
+        return moves;
     }
 
-    private Point decideNextMove() {
-        findProbabilities();
-        moves = bestMove();
-
-        //int random = (int) (Math.random() * (moves.size() - 1));
-        return moves.remove(0);
+    public List<Point> getMoves() {
+        return moves;
     }
 
-    public void reset() {
-        System.out.println("reseting");
-        restartData();
-    }
-
-    public void update(Map<Object, Object> gameProperties) {
-        Integer turnPercentage = (Integer) game.getGameProperties().get(ChocoMouche.Property.TurnPercentage);
-        if (lastMove != null && turnPercentage == 98) {
-            System.out.println("updating");
-            update(lastMove, (int[][]) game.getGameProperties().get(ChocoMouche.Property.Map));
-        }
-    }
-
-    public void decideMove() {
-        if (minProbability == 0 && !moves.isEmpty())
-            lastMove = moves.remove(0);
-        else {
-            System.out.println("deciding move");
-            lastMove = decideNextMove();
-        }
-    }
-
-    public void move() {
-        Integer turnPercentage = (Integer) game.getGameProperties().get(ChocoMouche.Property.TurnPercentage);
-        if (turnPercentage == 98) {
-            System.out.println("moving");
-            GameInterface.MoveMouseTo(lastMove);
-        } else {
-            System.out.println("waiting");
-        }
+    public double getMinProbability() {
+        return minProbability;
     }
 }
