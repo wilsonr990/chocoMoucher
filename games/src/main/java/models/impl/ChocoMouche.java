@@ -42,13 +42,34 @@ public class ChocoMouche extends BasicGame {
 
         lives = getLivesValue(masked.remove(74), masked.remove(65), masked.remove(56));
         turnPercentage = getTurnPercentageValue(masked.remove(72));
+
+        int[][] newMap = new int[8][9];
         for (int i = 0; i < 72; i++) {
             int x = i % 8;
             int y = i / 8;
             int imageValue = getImageValue(masked.get(i));
             if (map[x][y] == -1 || map[x][y] == 0)
-                map[x][y] = imageValue;
+                newMap[x][y] = imageValue;
+            else
+                newMap[x][y] = map[x][y];
         }
+        if (simpleValidationOfMap(newMap)) {
+            map = newMap;
+        }
+    }
+
+    private boolean simpleValidationOfMap(int[][] map) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (map[i][j] == 0)
+                    for (int k = i - 1; k <= i + 1; k++)
+                        for (int l = j - 1; l <= j + 1; l++)
+                            if (k >= 0 && l >= 0 && k < 8 && l < 9)
+                                if (map[k][l] == -1)
+                                    return false;
+            }
+        }
+        return true;
     }
 
     public Map<Object, Object> getGameProperties() {
@@ -61,6 +82,8 @@ public class ChocoMouche extends BasicGame {
     }
 
     public String getDrawableMap() {
+        if (!playingGame()) return "";
+
         String drawable = "";
         for (int i = 0; i < 72; i++) {
             int x = i % 8;

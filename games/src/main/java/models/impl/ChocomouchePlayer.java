@@ -30,7 +30,7 @@ public class ChocomouchePlayer extends BasicPlayer {
     private List<Point> moves;
     private double minProbability;
 
-    public ChocomouchePlayer(Game chocoMouche, GameInterface gameInterface) {
+    public ChocomouchePlayer(Game chocoMouche) {
         super(chocoMouche);
 
         restartData();
@@ -44,11 +44,8 @@ public class ChocomouchePlayer extends BasicPlayer {
     public boolean update() {
         Map<Object, Object> properties = game.getGameProperties();
         turnPercentage = (Integer) properties.get(TurnPercentage);
-        Integer newLives = (Integer) properties.get(ChocoMouche.Property.Lives);
+        Integer lives = (Integer) properties.get(ChocoMouche.Property.Lives);
         int[][] newMap = (int[][]) properties.get(ChocoMouche.Property.Map);
-
-        if (lives == 1 && newLives == 3)
-            reset();
 
         if (turnPercentage <= 97 && mapChanged(newMap)) {
             System.out.println("updating");
@@ -62,6 +59,7 @@ public class ChocomouchePlayer extends BasicPlayer {
     }
 
     private boolean mapChanged(int[][] newMap) {
+        if (newMap == null) return false;
         if (map == null) {
             map = new int[8][9];
             for (int i = 0; i < 8; i++)
@@ -87,6 +85,11 @@ public class ChocomouchePlayer extends BasicPlayer {
 
                 moves = bestMoves();
 
+                if (moves.isEmpty()) {
+                    game.reset();
+                    restartData();
+                    return false;
+                }
                 System.out.println("new best moves:" + moves);
             } else {
                 System.out.println("there was pending moves!");
@@ -100,7 +103,7 @@ public class ChocomouchePlayer extends BasicPlayer {
         Integer turnPercentage = (Integer) game.getGameProperties().get(TurnPercentage);
         if (turnPercentage <= 97) {
             System.out.println("moving");
-            int random = 0; //(int) (Math.random() * (moves.size() - 1));
+            int random = (int) (Math.random() * (moves.size() - 1));
 
             Point move = moves.remove(random);
             System.out.println("MOVEE! " + move);
@@ -108,10 +111,11 @@ public class ChocomouchePlayer extends BasicPlayer {
             Dimension cellDimension = new Dimension(30, 29);
             int cellPositionX = (int) (game.getLocation().x + mapLocation.x + move.x * cellDimension.getWidth() + cellDimension.getWidth() / 2);
             int cellPositionY = (int) (game.getLocation().y + mapLocation.y + move.y * cellDimension.getHeight() + cellDimension.getHeight() / 2);
-            GameInterface.MoveMouseTo(new Point(cellPositionX, cellPositionY));
-            GameInterface.MouseClick();
-            GameInterface.MouseClick();
-            return true;
+
+            boolean success = GameInterface.MoveMouseTo(new Point(cellPositionX, cellPositionY));
+            success &= GameInterface.MouseClick();
+            success &= GameInterface.MouseClick();
+            return success;
         }
         return false;
     }
@@ -135,7 +139,7 @@ public class ChocomouchePlayer extends BasicPlayer {
             for (int j = 0; j < 9; j++) {
                 if (map[i][j] > 0 && map[i][j] < 9)
                     numbers.add(new Point(i, j));
-                if (map[i][j] > 0 && map[i][j] < 10)
+                if (map[i][j] >= 0 && map[i][j] <= 9)
                     moves.remove(new Point(i, j));
             }
     }

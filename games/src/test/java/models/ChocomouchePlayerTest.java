@@ -48,7 +48,7 @@ public class ChocomouchePlayerTest {
         properties.put(ChocoMouche.Property.TurnPercentage, 50);
         properties.put(ChocoMouche.Property.Map, map);
         when(mockGame.getGameProperties()).thenReturn(properties);
-        ChocomouchePlayer player = new ChocomouchePlayer(mockGame, mockInterface);
+        ChocomouchePlayer player = new ChocomouchePlayer(mockGame);
 
         player.update();
         player.getBestMoves();
@@ -75,7 +75,7 @@ public class ChocomouchePlayerTest {
         properties.put(ChocoMouche.Property.TurnPercentage, 50);
         properties.put(ChocoMouche.Property.Map, map);
         when(mockGame.getGameProperties()).thenReturn(properties);
-        ChocomouchePlayer player = new ChocomouchePlayer(mockGame, mockInterface);
+        ChocomouchePlayer player = new ChocomouchePlayer(mockGame);
 
         player.update();
         player.getBestMoves();
@@ -102,7 +102,7 @@ public class ChocomouchePlayerTest {
         properties.put(ChocoMouche.Property.TurnPercentage, 50);
         properties.put(ChocoMouche.Property.Map, map);
         when(mockGame.getGameProperties()).thenReturn(properties);
-        ChocomouchePlayer player = new ChocomouchePlayer(mockGame, mockInterface);
+        ChocomouchePlayer player = new ChocomouchePlayer(mockGame);
 
         player.update();
         player.getBestMoves();
@@ -129,7 +129,7 @@ public class ChocomouchePlayerTest {
         properties.put(ChocoMouche.Property.TurnPercentage, 50);
         properties.put(ChocoMouche.Property.Map, map);
         when(mockGame.getGameProperties()).thenReturn(properties);
-        ChocomouchePlayer player = new ChocomouchePlayer(mockGame, mockInterface);
+        ChocomouchePlayer player = new ChocomouchePlayer(mockGame);
 
         player.update();
         player.getBestMoves();
@@ -156,7 +156,7 @@ public class ChocomouchePlayerTest {
         properties.put(ChocoMouche.Property.TurnPercentage, 50);
         properties.put(ChocoMouche.Property.Map, map);
         when(mockGame.getGameProperties()).thenReturn(properties);
-        ChocomouchePlayer player = new ChocomouchePlayer(mockGame, mockInterface);
+        ChocomouchePlayer player = new ChocomouchePlayer(mockGame);
 
         player.update();
         player.getBestMoves();

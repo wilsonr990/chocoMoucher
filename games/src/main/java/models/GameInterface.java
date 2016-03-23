@@ -9,26 +9,32 @@ import java.awt.event.MouseEvent;
 public class GameInterface {
     private static Robot r;
 
-    public GameInterface() {
+    public static boolean MoveMouseTo(Point p) {
         try {
-            r = new Robot();
+            getRobot().mouseMove(p.x, p.y);
+            return true;
         } catch (AWTException e) {
+            return false;
         }
     }
 
-
-    public static void MoveMouseTo(Point p) {
-        r.mouseMove(p.x, p.y);
-    }
-
-    public static void MouseClick() {
+    public static boolean MouseClick() {
         try {
-            r.mousePress(MouseEvent.BUTTON1_DOWN_MASK);
+            getRobot().mousePress(MouseEvent.BUTTON1_DOWN_MASK);
             Thread.sleep(100);
-            r.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK);
+            getRobot().mouseRelease(MouseEvent.BUTTON1_DOWN_MASK);
+            return true;
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            return false;
+        } catch (AWTException e) {
+            return false;
         }
+    }
+
+    public static Robot getRobot() throws AWTException {
+        if(r==null)
+            r=new Robot();
+        return r;
     }
 
     public void clickOn(Point p) {

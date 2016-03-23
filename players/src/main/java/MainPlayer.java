@@ -10,7 +10,7 @@ public class MainPlayer {
         PlayerView mainView = new PlayerView();
 
         Game game = new ChocoMouche();
-        Player player = new ChocomouchePlayer(game, new GameInterface());
+        Player player = new ChocomouchePlayer(game);
 
         PlayerModel playerModel = new PlayerModel(game, player);
         Recorder recorderModel = new Recorder(game);

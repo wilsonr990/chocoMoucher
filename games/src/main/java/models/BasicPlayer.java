@@ -60,9 +60,9 @@ public abstract class BasicPlayer implements Player {
                 if (!game.playingGame())
                     gameState = Status.WaitingGame;
                 else if (decided) {
-                    moved = false;
                     gameState = Status.Moving;
-                }
+                } else
+                    gameState = Status.UpdatingGame;
                 break;
             case Moving:
                 if (!game.playingGame())
