@@ -6,6 +6,7 @@ import Image.ImageHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -177,8 +178,9 @@ public class Analyzer {
                     for (File image : imageFiles) {
                         if (interrupted()) return;
 
-                        if (new ImageHolder(image).findSubImage(pattern) != null)
-                            pattern.saveImage(finalFile.getAbsolutePath() + "\\r" + i++ + ".png");
+                        ImageHolder imageHolder = new ImageHolder(image);
+                        if (imageHolder.findSubImage(pattern) != null)
+                            imageHolder.saveImage(finalFile.getAbsolutePath() + "\\r" + i++ + ".png");
                     }
                     threads.remove(this);
                 } catch (FileAlreadyExists fileAlreadyExists) {
@@ -201,35 +203,27 @@ public class Analyzer {
             @Override
             public void run() {
                 try {
+                    List<ImageHolder> saved = new ArrayList<ImageHolder>();
+                    URL resource = getClass().getClassLoader().getResource("base.png");
+                    File file = new File(resource.getFile()).getParentFile();
+                    File[] savedImages = file.listFiles();
+
+                    for (File img : savedImages) {
+                        String name = img.getName();
+                        if (name.contains(".png"))
+                            saved.add(new ImageHolder(name));
+                    }
+
                     int i = 0;
                     for (File image : imageFiles) {
                         if (interrupted()) return;
-                        List<ImageHolder> saved = new ArrayList<ImageHolder>();
-                        saved.add(new ImageHolder("1.png"));
-                        saved.add(new ImageHolder("2.png"));
-                        saved.add(new ImageHolder("3.png"));
-                        saved.add(new ImageHolder("4.png"));
-                        saved.add(new ImageHolder("f.png"));
-//                        saved.add(new ImageHolder("f2.png"));
-//                        saved.add(new ImageHolder("f3.png"));
-//                        saved.add(new ImageHolder("f4.png"));
-//                        saved.add(new ImageHolder("f5.png"));
-//                        saved.add(new ImageHolder("f6.png"));
-//                        saved.add(new ImageHolder("f7.png"));
-//                        saved.add(new ImageHolder("f8.png"));
-//                        saved.add(new ImageHolder("f9.png"));
-//                        saved.add(new ImageHolder("f10.png"));
-                        saved.add(new ImageHolder("a.png"));
-                        saved.add(new ImageHolder("l.png"));
-                        saved.add(new ImageHolder("c.png"));
-                        saved.add(new ImageHolder("b.png"));
 
                         ImageHolder current = new ImageHolder(image);
                         ArrayList<ImageHolder> masked = current.getMaskedImages(mask);
                         for (ImageHolder img : masked) {
                             if (!alreadySaved(img, saved)) {
                                 saved.add(img);
-                                img.saveImage(finalFile.getAbsolutePath() + "\\" + i++ + ".png");
+                                img.saveImage(finalFile.getAbsolutePath() + "\\r" + i++ + ".png");
                             }
                         }
                     }
